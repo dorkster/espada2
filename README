@@ -1,0 +1,36 @@
+# Espada 2
+-------------------------------------------------------------------------------
+
+Espada 2 is a 2D vertical space shooter. This was made as an improved version of the first game, Espada.
+
+
+
+## Copyright & License
+
+Espada 2 is Copyright (c) 2013 Justin Jacobs
+
+Espada 2's source code is released under the GNU GPL v3. Later versions are permitted.
+
+The included VDS font is licensed under the SIL Open Font License, Version 1.1.
+
+All other artwork is by me, Justin Jacobs, and is licensed under CC-BY-SA 3.0.
+
+
+
+## Dependencies & Building
+
+* SDL
+* SDL_ttf
+* SDL_image
+* SDL_mixer
+
+To compile Espada 2, simply run `make` in the base directory.
+
+
+
+## Controls
+
+* Arrow keys / Joystick D-pad = Move ship
+* Z / Joystick Button 0 = Fire laser / Confirm menu selection
+* ESC / Joystick Button 9 = Pause the game
+

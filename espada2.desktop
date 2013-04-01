@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+
+Type=Application
+
+Name=Espada 2
+Comment=Another 2D space shooter
+Icon=
+
+Categories=SDL;Game;
+
+Exec=espada2
+Terminal=false
+StartupNotify=false
