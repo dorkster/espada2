@@ -19,8 +19,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#define PLAYERW 64
-#define PLAYERH 32
+#define PLAYERW 128
+#define PLAYERH 64
 
 typedef struct Player{
     int x,y;

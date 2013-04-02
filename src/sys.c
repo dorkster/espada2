@@ -69,7 +69,7 @@ int option_fullscreen = 0;
 bool sysInit() {
     if(SDL_Init(SDL_INIT_EVERYTHING) == -1) return false;
     
-    screen = SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,SDL_HWSURFACE);
+    screen = SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,SDL_HWSURFACE|SDL_DOUBLEBUF);
 
     if(screen == NULL) return false;
     
@@ -90,7 +90,7 @@ bool sysInit() {
 
 bool sysLoadFiles() {
     // font
-    font = TTF_OpenFont(PKGDATADIR "/fonts/VDS_Italic_New.ttf",20);
+    font = TTF_OpenFont(PKGDATADIR "/fonts/VDS_Italic_New.ttf",24);
     if(!font) return false;
     else TTF_SetFontHinting(font, TTF_HINTING_LIGHT);
 
