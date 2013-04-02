@@ -28,7 +28,7 @@ typedef enum { false = 0, true = 1 } bool;
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define SCREEN_BPP 32
-#define FPS 30
+#define FPS 60
 #define JOY_DEADZONE 100
 #define ACTION_COOLDOWN 10 / (60/FPS)
 
@@ -94,6 +94,7 @@ SDL_Surface* surface_bar_inactive;
 SDL_Surface* surface_background;
 SDL_Surface* surface_title;
 SDL_Surface* surface_highscores;
+SDL_Surface* surface_player;
 
 // Music and Sounds
 Mix_Music* music;

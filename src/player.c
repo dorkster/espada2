@@ -16,15 +16,30 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DRAW_H
-#define DRAW_H
+#include <stdlib.h>
 
-void drawEverything();
-void drawMenu(int offset);
-void drawInfo();
-void drawTitle();
-void drawHighScores();
-void drawOptions();
-void drawPlayer();
+#include "player.h"
+#include "sys.h"
 
-#endif
+void playerInit() {
+    player.x = (SCREEN_WIDTH/2) - (PLAYERW/2);
+    player.y = SCREEN_HEIGHT - PLAYERH - 64;
+}
+
+void playerLogic() {
+    playerMove();
+}
+
+void playerMove() {
+    int speed = 4;
+
+    if (action_left) player.x -= speed;
+    else if (action_right) player.x += speed;
+    if (action_up) player.y -= speed;
+    else if (action_down) player.y += speed;
+
+    if (player.x < 0) player.x = 0;
+    else if (player.x > SCREEN_WIDTH-PLAYERW) player.x = SCREEN_WIDTH-PLAYERW;
+    if (player.y < 0) player.y = 0;
+    else if (player.y > SCREEN_HEIGHT-PLAYERH-32) player.y = SCREEN_HEIGHT-PLAYERH-32;
+}

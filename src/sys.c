@@ -37,6 +37,7 @@ SDL_Surface* surface_bar_inactive = NULL;
 SDL_Surface* surface_background = NULL;
 SDL_Surface* surface_title = NULL;
 SDL_Surface* surface_highscores = NULL;
+SDL_Surface* surface_player = NULL;
 Mix_Music* music = NULL;
 Mix_Chunk* sound_menu = NULL;
 Mix_Chunk* sound_switch = NULL;
@@ -134,6 +135,14 @@ bool sysLoadFiles() {
         SDL_FreeSurface(cleanup);
     }
 
+    surface_player = IMG_Load(PKGDATADIR "/graphics/player.png");
+    if (!surface_player) return false;
+    else {
+        SDL_Surface *cleanup = surface_player;
+        surface_player = SDL_DisplayFormatAlpha(surface_player);
+        SDL_FreeSurface(cleanup);
+    }
+
     // background music
     // music = Mix_LoadMUS(PKGDATADIR "/sounds/music.ogg");
     // if (!music) return false;
@@ -159,6 +168,7 @@ void sysCleanup() {
     SDL_FreeSurface(surface_background);
     SDL_FreeSurface(surface_title);
     SDL_FreeSurface(surface_highscores);
+    SDL_FreeSurface(surface_player);
     Mix_FreeMusic(music);
     Mix_FreeChunk(sound_menu);
     Mix_FreeChunk(sound_switch);

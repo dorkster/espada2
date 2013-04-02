@@ -20,6 +20,7 @@
 
 #include "game.h"
 #include "menu.h"
+#include "player.h"
 #include "sys.h"
 
 void gameTitle() {
@@ -68,6 +69,8 @@ void gameInit() {
     if (!game_over) Mix_PlayMusic(music,-1);
 
     game_over = false;
+
+    playerInit();
 }
 
 void gameLogic() {
@@ -220,6 +223,7 @@ void gameLogic() {
             }
         } else {
             // player, enemy, and bullet logic goes here
+            playerLogic();
         }
     }
 }

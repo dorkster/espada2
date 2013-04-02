@@ -16,15 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DRAW_H
-#define DRAW_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
-void drawEverything();
-void drawMenu(int offset);
-void drawInfo();
-void drawTitle();
-void drawHighScores();
-void drawOptions();
-void drawPlayer();
+#define PLAYERW 64
+#define PLAYERH 32
+
+typedef struct Player{
+    int x,y;
+}Player;
+
+Player player;
+
+void playerInit();
+void playerLogic();
+void playerMove();
 
 #endif

@@ -20,6 +20,7 @@
 
 #include "draw.h"
 #include "menu.h"
+#include "player.h"
 #include "sys.h"
 
 void drawEverything() {
@@ -35,6 +36,7 @@ void drawEverything() {
     } else if (options_screen > -1) {
         drawOptions();
     } else {
+        drawPlayer();
         drawInfo();
     }
 }
@@ -149,5 +151,18 @@ void drawHighScores() {
 void drawOptions() {
     // menu
     drawMenu(0);
+}
+
+void drawPlayer() {
+    SDL_Rect src,dest;
+
+    src.x = src.y = 0;
+    src.w = PLAYERW;
+    src.h = PLAYERH;
+
+    dest.x = player.x;
+    dest.y = player.y;
+
+    SDL_BlitSurface(surface_player,&src,screen,&dest);
 }
 
