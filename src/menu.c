@@ -50,8 +50,8 @@ void menuClear() {
 
 int menuLogic() {
     if (menu_size > 0) {
-        if (action_switch) {
-            action_switch = false;
+        if (action_main1) {
+            action_main1 = false;
             Mix_PlayChannel(-1,sound_menu,0);
             return menu_option;
         } else if (action_up && action_cooldown == 0 && menu_option > 0) {

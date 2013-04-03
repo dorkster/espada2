@@ -57,7 +57,7 @@ bool action_left = false;
 bool action_right = false;
 bool action_up = false;
 bool action_down = false;
-bool action_switch = false;
+bool action_main1 = false;
 bool action_pause = false;
 
 char* config_folder = NULL;
@@ -143,6 +143,14 @@ bool sysLoadFiles() {
         SDL_FreeSurface(cleanup);
     }
 
+    surface_hazards = IMG_Load(PKGDATADIR "/graphics/hazards.png");
+    if (!surface_hazards) return false;
+    else {
+        SDL_Surface *cleanup = surface_hazards;
+        surface_hazards = SDL_DisplayFormatAlpha(surface_hazards);
+        SDL_FreeSurface(cleanup);
+    }
+
     // background music
     // music = Mix_LoadMUS(PKGDATADIR "/sounds/music.ogg");
     // if (!music) return false;
@@ -169,6 +177,7 @@ void sysCleanup() {
     SDL_FreeSurface(surface_title);
     SDL_FreeSurface(surface_highscores);
     SDL_FreeSurface(surface_player);
+    SDL_FreeSurface(surface_hazards);
     Mix_FreeMusic(music);
     Mix_FreeChunk(sound_menu);
     Mix_FreeChunk(sound_switch);
@@ -187,7 +196,7 @@ void sysInput() {
             if(event.key.keysym.sym == SDLK_DOWN)
                 action_down = true;
             if(event.key.keysym.sym == 'z')
-                action_switch = true;
+                action_main1 = true;
             if(event.key.keysym.sym == SDLK_ESCAPE)
                 action_pause = true;
         }
@@ -202,7 +211,7 @@ void sysInput() {
             if(event.key.keysym.sym == SDLK_DOWN)
                 action_down = false;
             if(event.key.keysym.sym == 'z')
-                action_switch = false;
+                action_main1 = false;
             if(event.key.keysym.sym == SDLK_ESCAPE)
                 action_pause = false;
         }
@@ -210,7 +219,7 @@ void sysInput() {
         else if(event.type == SDL_JOYBUTTONDOWN) {
             if(event.jbutton.which == 0) {
                 if (event.jbutton.button == 0)
-                    action_switch = true;
+                    action_main1 = true;
                 if (event.jbutton.button == 9)
                     action_pause = true;
             }
@@ -219,7 +228,7 @@ void sysInput() {
         else if(event.type == SDL_JOYBUTTONUP) {
             if(event.jbutton.which == 0) {
                 if (event.jbutton.button == 0)
-                    action_switch = false;
+                    action_main1 = false;
                 if (event.jbutton.button == 9)
                     action_pause = false;
             }

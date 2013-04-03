@@ -19,6 +19,7 @@
 #include "SDL/SDL_ttf.h"
 
 #include "draw.h"
+#include "hazard.h"
 #include "menu.h"
 #include "player.h"
 #include "sys.h"
@@ -36,6 +37,7 @@ void drawEverything() {
     } else if (options_screen > -1) {
         drawOptions();
     } else {
+        drawHazards();
         drawPlayer();
         drawInfo();
     }
@@ -166,3 +168,20 @@ void drawPlayer() {
     SDL_BlitSurface(surface_player,&src,screen,&dest);
 }
 
+void drawHazards() {
+    SDL_Rect src,dest;
+
+    src.x = src.y = 0;
+    src.w = src.h = HAZARD_SIZE;
+
+    int i;
+    for (i=0; i<HAZARD_MAX; i++) {
+        if (hazards[i].active) {
+            src.x = hazards[i].gfx * HAZARD_SIZE;
+            dest.x = hazards[i].x;
+            dest.y = hazards[i].y;
+
+            SDL_BlitSurface(surface_hazards,&src,screen,&dest);
+        }
+    }
+}

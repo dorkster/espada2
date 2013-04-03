@@ -16,21 +16,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef HAZARD_H
+#define HAZARD_H
 
-#define PLAYERW 128
-#define PLAYERH 64
+#include "sys.h"
 
-typedef struct Player{
+#define HAZARD_PLAYER 0
+#define HAZARD_ENEMY 1
+#define HAZARD_GFX1 0
+
+#define HAZARD_MAX 256
+#define HAZARD_SIZE 16
+
+typedef struct Hazard{
     int x,y;
-}Player;
+    int speed_x, speed_y;
+    int src;
+    int gfx;
+    bool active;
+}Hazard;
 
-Player player;
+Hazard hazards[HAZARD_MAX];
 
-void playerInit();
-void playerLogic();
-void playerMove();
-void playerShoot();
+void hazardInit();
+void hazardLogic();
+void hazardAdd(int src, int gfx, int x, int y, float angle, int speed);
+void hazardReset(int i);
 
 #endif

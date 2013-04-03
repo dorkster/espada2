@@ -18,6 +18,7 @@
 
 #include <stdlib.h>
 
+#include "hazard.h"
 #include "player.h"
 #include "sys.h"
 
@@ -28,6 +29,7 @@ void playerInit() {
 
 void playerLogic() {
     playerMove();
+    playerShoot();
 }
 
 void playerMove() {
@@ -42,4 +44,15 @@ void playerMove() {
     else if (player.x > SCREEN_WIDTH-PLAYERW) player.x = SCREEN_WIDTH-PLAYERW;
     if (player.y < 0) player.y = 0;
     else if (player.y > SCREEN_HEIGHT-PLAYERH-32) player.y = SCREEN_HEIGHT-PLAYERH-32;
+}
+
+void playerShoot() {
+    if (action_cooldown > 0) return;
+
+    if (action_main1) {
+        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.x, player.y, 10, 8);
+        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.x+PLAYERW-HAZARD_SIZE, player.y, -10, 8);
+    }
+
+    action_cooldown = ACTION_COOLDOWN;
 }

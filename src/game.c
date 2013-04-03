@@ -19,6 +19,7 @@
 #include <stdlib.h>
 
 #include "game.h"
+#include "hazard.h"
 #include "menu.h"
 #include "player.h"
 #include "sys.h"
@@ -71,6 +72,7 @@ void gameInit() {
     game_over = false;
 
     playerInit();
+    hazardInit();
 }
 
 void gameLogic() {
@@ -223,6 +225,7 @@ void gameLogic() {
             }
         } else {
             // player, enemy, and bullet logic goes here
+            hazardLogic();
             playerLogic();
         }
     }

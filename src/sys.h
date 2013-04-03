@@ -59,7 +59,7 @@ bool action_left;
 bool action_right;
 bool action_up;
 bool action_down;
-bool action_switch;
+bool action_main1;
 bool action_pause;
 
 char* config_folder;
@@ -95,6 +95,7 @@ SDL_Surface* surface_background;
 SDL_Surface* surface_title;
 SDL_Surface* surface_highscores;
 SDL_Surface* surface_player;
+SDL_Surface* surface_hazards;
 
 // Music and Sounds
 Mix_Music* music;

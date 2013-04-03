@@ -26,5 +26,6 @@ void drawTitle();
 void drawHighScores();
 void drawOptions();
 void drawPlayer();
+void drawHazards();
 
 #endif
