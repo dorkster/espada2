@@ -24,11 +24,13 @@
 #include "player.h"
 #include "sys.h"
 
+int background_y = 0;
+
 void drawEverything() {
     // Fill the screen with black
     SDL_FillRect(screen,NULL, 0x000000);
 
-    SDL_BlitSurface(surface_background,NULL,screen,NULL);
+    drawBackground();
 
     if (title_screen) {
         drawTitle();
@@ -41,6 +43,21 @@ void drawEverything() {
         drawPlayer();
         drawInfo();
     }
+}
+
+void drawBackground() {
+    SDL_Rect dest, dest2;
+    dest.x = dest2.x = 0;
+
+    dest.y = background_y - SCREEN_HEIGHT;
+    dest2.y = background_y;
+
+    SDL_BlitSurface(surface_background,NULL,screen,&dest);
+    SDL_BlitSurface(surface_background,NULL,screen,&dest2);
+
+    background_y += 5;
+    if (background_y > SCREEN_HEIGHT)
+        background_y = 0;
 }
 
 void drawMenu(int offset) {

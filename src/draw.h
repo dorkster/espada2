@@ -19,7 +19,10 @@
 #ifndef DRAW_H
 #define DRAW_H
 
+int background_y;
+
 void drawEverything();
+void drawBackground();
 void drawMenu(int offset);
 void drawInfo();
 void drawTitle();
