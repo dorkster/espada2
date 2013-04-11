@@ -53,8 +53,8 @@ void hazardAdd(int src, int gfx, int x, int y, float angle, int speed) {
     for (i=0; i<HAZARD_MAX; i++) {
         if (!hazards[i].active) {
             hazards[i].active = true;
-            hazards[i].src = HAZARD_PLAYER;
-            hazards[i].gfx = HAZARD_GFX1;
+            hazards[i].src = src;
+            hazards[i].gfx = gfx;
             hazards[i].x = x;
             hazards[i].y = y;
 

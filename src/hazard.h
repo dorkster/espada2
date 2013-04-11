@@ -24,6 +24,7 @@
 #define HAZARD_PLAYER 0
 #define HAZARD_ENEMY 1
 #define HAZARD_GFX1 0
+#define HAZARD_GFX2 1
 
 #define HAZARD_MAX 256
 #define HAZARD_SIZE 16

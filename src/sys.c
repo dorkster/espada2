@@ -151,6 +151,14 @@ bool sysLoadFiles() {
         SDL_FreeSurface(cleanup);
     }
 
+    surface_enemy1 = IMG_Load(PKGDATADIR "/graphics/enemy1.png");
+    if (!surface_enemy1) return false;
+    else {
+        SDL_Surface *cleanup = surface_enemy1;
+        surface_enemy1 = SDL_DisplayFormatAlpha(surface_enemy1);
+        SDL_FreeSurface(cleanup);
+    }
+
     // background music
     // music = Mix_LoadMUS(PKGDATADIR "/sounds/music.ogg");
     // if (!music) return false;
@@ -178,6 +186,7 @@ void sysCleanup() {
     SDL_FreeSurface(surface_highscores);
     SDL_FreeSurface(surface_player);
     SDL_FreeSurface(surface_hazards);
+    SDL_FreeSurface(surface_enemy1);
     Mix_FreeMusic(music);
     Mix_FreeChunk(sound_menu);
     Mix_FreeChunk(sound_switch);

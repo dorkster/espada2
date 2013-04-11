@@ -16,20 +16,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DRAW_H
-#define DRAW_H
+#ifndef ENEMY_H
+#define ENEMY_H
 
-int background_y;
+#include "sys.h"
 
-void drawEverything();
-void drawBackground();
-void drawMenu(int offset);
-void drawInfo();
-void drawTitle();
-void drawHighScores();
-void drawOptions();
-void drawPlayer();
-void drawHazards();
-void drawEnemies();
+#define ENEMY_LOGIC1 0
+#define ENEMY_GFX1 0
+
+#define ENEMY_MAX 16
+
+typedef struct Enemy{
+    int x,y;
+    int w,h;
+    int speed_x, speed_y;
+    int logic;
+    SDL_Surface *gfx;
+    bool active;
+    int shoot_timer;
+}Enemy;
+
+Enemy enemies[ENEMY_MAX];
+int enemy_total;
+
+void enemyInit();
+void enemyLogic();
+void enemyAdd(int logic, int gfx, int x, int y);
+void enemyReset(int i);
+void enemyCreateWave();
 
 #endif

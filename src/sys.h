@@ -96,6 +96,7 @@ SDL_Surface* surface_title;
 SDL_Surface* surface_highscores;
 SDL_Surface* surface_player;
 SDL_Surface* surface_hazards;
+SDL_Surface* surface_enemy1;
 
 // Music and Sounds
 Mix_Music* music;

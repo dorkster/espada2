@@ -19,6 +19,7 @@
 #include "SDL/SDL_ttf.h"
 
 #include "draw.h"
+#include "enemy.h"
 #include "hazard.h"
 #include "menu.h"
 #include "player.h"
@@ -40,6 +41,7 @@ void drawEverything() {
         drawOptions();
     } else {
         drawHazards();
+        drawEnemies();
         drawPlayer();
         drawInfo();
     }
@@ -199,6 +201,24 @@ void drawHazards() {
             dest.y = hazards[i].y;
 
             SDL_BlitSurface(surface_hazards,&src,screen,&dest);
+        }
+    }
+}
+
+void drawEnemies() {
+    SDL_Rect src,dest;
+
+    src.x = src.y = 0;
+
+    int i;
+    for (i=0; i<ENEMY_MAX; i++) {
+        if (enemies[i].active) {
+            src.w = enemies[i].w;
+            src.h = enemies[i].h;
+            dest.x = enemies[i].x;
+            dest.y = enemies[i].y;
+
+            SDL_BlitSurface(enemies[i].gfx,&src,screen,&dest);
         }
     }
 }
