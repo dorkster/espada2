@@ -278,6 +278,15 @@ void sysInput() {
     }
 }
 
+void sysInputClear() {
+    action_left = false;
+    action_right = false;
+    action_up = false;
+    action_down = false;
+    action_main1 = false;
+    action_pause = false;
+}
+
 void sysConfigSetFolder() {
     char *home = malloc(strlen(getenv("HOME"))+1);
     strcpy(home,getenv("HOME"));

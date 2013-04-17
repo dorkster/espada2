@@ -236,6 +236,7 @@ void gameLogic() {
 }
 
 void gameOver() {
+    sysInputClear();
     trigger_game_over = false;
     game_over = true;
 

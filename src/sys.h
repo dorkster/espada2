@@ -80,6 +80,7 @@ bool sysInit();
 bool sysLoadFiles();
 void sysCleanup();
 void sysInput();
+void sysInputClear();
 void sysConfigSetFolder();
 void sysConfigLoad();
 void sysConfigSave();
