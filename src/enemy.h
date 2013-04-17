@@ -43,5 +43,6 @@ void enemyLogic();
 void enemyAdd(int logic, int gfx, int x, int y);
 void enemyReset(int i);
 void enemyCreateWave();
+void enemyKill(int i);
 
 #endif

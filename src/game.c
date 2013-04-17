@@ -230,6 +230,7 @@ void gameLogic() {
             hazardLogic();
             enemyLogic();
             playerLogic();
+            gameCollide();
         }
     }
 }
@@ -277,3 +278,39 @@ void gameAddHighScore(int _score) {
     }
 }
 
+void gameCollide() {
+    int i,j;
+
+    // hazards VS player/enemies
+    for (i=0; i<HAZARD_MAX; i++) {
+        if (hazards[i] != NULL) {
+            if (hazards[i]->src == HAZARD_ENEMY && sysCollide(&hazards[i]->pos, &player.pos)) {
+                // hazard hit player
+                hazardReset(i);
+                playerKill();
+            } else if (hazards[i]->src == HAZARD_PLAYER) {
+                for (j=0; j<ENEMY_MAX; j++) {
+                    if (enemies[j] != NULL) {
+                        if (sysCollide(&hazards[i]->pos, &enemies[j]->pos)) {
+                            // hazard hit enemy
+                            hazardReset(i);
+                            enemyKill(j);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // enemies VS player
+    for (i=0; i<ENEMY_MAX; i++) {
+        if (enemies[i] != NULL) {
+            if (sysCollide(&enemies[i]->pos, &player.pos)) {
+                // player collided with enemy
+                enemyKill(i);
+                playerKill();
+                continue;
+            }
+        }
+    }
+}

@@ -34,5 +34,6 @@ void playerInit();
 void playerLogic();
 void playerMove();
 void playerShoot();
+void playerKill();
 
 #endif

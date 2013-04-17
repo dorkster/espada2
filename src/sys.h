@@ -87,6 +87,7 @@ void sysConfigApply();
 void sysHighScoresLoad();
 void sysHighScoresSave();
 void sysHighScoresClear();
+bool sysCollide(SDL_Rect* A, SDL_Rect* B);
 
 // Images
 SDL_Surface* surface_bar;

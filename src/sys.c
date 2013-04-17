@@ -423,3 +423,16 @@ void sysHighScoresClear() {
     }
 }
 
+bool sysCollide(SDL_Rect* A, SDL_Rect* B) {
+    if (A == NULL || B == NULL) return false;
+
+    //If any of the sides from A are outside of B
+    if ((A->y + A->h) <= B->y) return false;
+    if (A->y >= (B->y + B->h)) return false;
+    if ((A->x + A->w) <= B->x) return false;
+    if (A->x >= (B->x + B->w)) return false;
+
+    //If none of the sides from A are outside B
+    return true;
+}
+

@@ -45,7 +45,7 @@ void enemyLogic() {
                     if (enemies[i]->shoot_timer == 0) {
                         hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x, enemies[i]->pos.y+enemies[i]->pos.h, 225, 4);
                         hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE, enemies[i]->pos.y+enemies[i]->pos.h, 135, 4);
-                        enemies[i]->shoot_timer = 60;
+                        enemies[i]->shoot_timer = 120;
                     } else enemies[i]->shoot_timer--;
                 }
             }
@@ -108,3 +108,9 @@ void enemyCreateWave() {
     enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 128, 0);
     enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, SCREEN_WIDTH-128, 0);
 }
+
+void enemyKill(int i) {
+    // TODO switch to death animation and wait for it to finish before removing the enemy
+    enemyReset(i);
+}
+

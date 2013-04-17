@@ -27,5 +27,6 @@ void gameLogic();
 void gameOver();
 void gamePause();
 void gameAddHighScore(int _score);
+void gameCollide();
 
 #endif

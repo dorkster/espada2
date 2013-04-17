@@ -58,3 +58,7 @@ void playerShoot() {
 
     action_cooldown = ACTION_COOLDOWN;
 }
+
+void playerKill() {
+    // TODO switch to death animation and wait for it to complete before removing a life
+}
