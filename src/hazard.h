@@ -37,7 +37,7 @@ typedef struct Hazard{
     bool active;
 }Hazard;
 
-Hazard hazards[HAZARD_MAX];
+Hazard* hazards[HAZARD_MAX];
 
 void hazardInit();
 void hazardLogic();

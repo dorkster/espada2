@@ -36,7 +36,7 @@ typedef struct Enemy{
     int shoot_timer;
 }Enemy;
 
-Enemy enemies[ENEMY_MAX];
+Enemy* enemies[ENEMY_MAX];
 int enemy_total;
 
 void enemyInit();

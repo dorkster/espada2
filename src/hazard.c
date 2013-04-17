@@ -22,7 +22,7 @@
 #include "hazard.h"
 #include "sys.h"
 
-Hazard hazards[HAZARD_MAX];
+Hazard* hazards[HAZARD_MAX];
 
 void hazardInit() {
     int i;
@@ -34,15 +34,17 @@ void hazardInit() {
 void hazardLogic() {
     int i;
     for (i=0; i<HAZARD_MAX; i++) {
-        if (hazards[i].active) {
-            hazards[i].x += hazards[i].speed_x;
-            hazards[i].y += hazards[i].speed_y;
-        }
-        if (hazards[i].x < 0-HAZARD_SIZE ||
-            hazards[i].x > SCREEN_WIDTH ||
-            hazards[i].y < 0-HAZARD_SIZE ||
-            hazards[i].y > SCREEN_HEIGHT) {
-            hazardReset(i);
+        if (hazards[i] != NULL) {
+            if (hazards[i]->active) {
+                hazards[i]->x += hazards[i]->speed_x;
+                hazards[i]->y += hazards[i]->speed_y;
+            }
+            if (hazards[i]->x < 0-HAZARD_SIZE ||
+                hazards[i]->x > SCREEN_WIDTH ||
+                hazards[i]->y < 0-HAZARD_SIZE ||
+                hazards[i]->y > SCREEN_HEIGHT) {
+                hazardReset(i);
+            }
         }
     }
 }
@@ -51,30 +53,30 @@ void hazardAdd(int src, int gfx, int x, int y, float angle, int speed) {
 	float pi = 3.1415926535898f;
     int i;
     for (i=0; i<HAZARD_MAX; i++) {
-        if (!hazards[i].active) {
-            hazards[i].active = true;
-            hazards[i].src = src;
-            hazards[i].gfx = gfx;
-            hazards[i].x = x;
-            hazards[i].y = y;
+        if (hazards[i] == NULL) {
+            hazards[i] = (Hazard*) malloc(sizeof(Hazard));
+            if (hazards[i] == NULL) return;
+
+            hazards[i]->active = true;
+            hazards[i]->src = src;
+            hazards[i]->gfx = gfx;
+            hazards[i]->x = x;
+            hazards[i]->y = y;
 
             // calcuate speed
             float theta = angle * pi / 180.0f;
             while (theta >= pi+pi) theta -= pi+pi;
             while (theta < 0.0) theta += pi+pi;
-            hazards[i].speed_x = speed * sin(theta);
-            hazards[i].speed_y = speed * -cos(theta);
+            hazards[i]->speed_x = speed * sin(theta);
+            hazards[i]->speed_y = speed * -cos(theta);
             break;
         }
     }
 }
 
 void hazardReset(int i) {
-    hazards[i].x = 0;
-    hazards[i].y = 0;
-    hazards[i].speed_x = 0;
-    hazards[i].speed_y = 0;
-    hazards[i].src = -1;
-    hazards[i].gfx = -1;
-    hazards[i].active = false;
+    if (hazards[i] != NULL) {
+        free(hazards[i]);
+        hazards[i] = NULL;
+    }
 }
