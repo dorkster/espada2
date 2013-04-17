@@ -30,7 +30,7 @@
 #define HAZARD_SIZE 16
 
 typedef struct Hazard{
-    int x,y;
+    SDL_Rect pos;
     int speed_x, speed_y;
     int src;
     int gfx;

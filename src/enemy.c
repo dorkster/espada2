@@ -41,15 +41,15 @@ void enemyLogic() {
         if (enemies[i] != NULL) {
             if (enemies[i]->active) {
                 if (enemies[i]->logic == ENEMY_LOGIC1) {
-                    enemies[i]->y += enemies[i]->speed_y;
+                    enemies[i]->pos.y += enemies[i]->speed_y;
                     if (enemies[i]->shoot_timer == 0) {
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->x, enemies[i]->y+enemies[i]->h, 225, 4);
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->x+enemies[i]->w-HAZARD_SIZE, enemies[i]->y+enemies[i]->h, 135, 4);
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x, enemies[i]->pos.y+enemies[i]->pos.h, 225, 4);
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE, enemies[i]->pos.y+enemies[i]->pos.h, 135, 4);
                         enemies[i]->shoot_timer = 60;
                     } else enemies[i]->shoot_timer--;
                 }
             }
-            if (enemies[i]->y > SCREEN_HEIGHT) {
+            if (enemies[i]->pos.y > SCREEN_HEIGHT) {
                 enemyReset(i);
             }
         }
@@ -70,14 +70,14 @@ void enemyAdd(int logic, int gfx, int x, int y) {
             // set up graphics
             if (gfx == ENEMY_GFX1) {
                 enemies[i]->gfx = surface_enemy1;
-                enemies[i]->w = 64;
-                enemies[i]->h = 32;
+                enemies[i]->pos.w = 64;
+                enemies[i]->pos.h = 32;
             }
 
             // we center the enemy on the given x pos
-            enemies[i]->x = x - (enemies[i]->w/2);
+            enemies[i]->pos.x = x - (enemies[i]->pos.w/2);
             // y will typically be 0, so this will start enemies off screen
-            enemies[i]->y = y - enemies[i]->h;
+            enemies[i]->pos.y = y - enemies[i]->pos.h;
 
             // set speed
             if (logic == ENEMY_LOGIC1) {

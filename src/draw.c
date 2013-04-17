@@ -181,8 +181,8 @@ void drawPlayer() {
     src.w = PLAYERW;
     src.h = PLAYERH;
 
-    dest.x = player.x;
-    dest.y = player.y;
+    dest.x = player.pos.x;
+    dest.y = player.pos.y;
 
     SDL_BlitSurface(surface_player,&src,screen,&dest);
 }
@@ -197,8 +197,8 @@ void drawHazards() {
     for (i=0; i<HAZARD_MAX; i++) {
         if (hazards[i] != NULL) {
             src.x = hazards[i]->gfx * HAZARD_SIZE;
-            dest.x = hazards[i]->x;
-            dest.y = hazards[i]->y;
+            dest.x = hazards[i]->pos.x;
+            dest.y = hazards[i]->pos.y;
 
             SDL_BlitSurface(surface_hazards,&src,screen,&dest);
         }
@@ -213,10 +213,10 @@ void drawEnemies() {
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] != NULL) {
-            src.w = enemies[i]->w;
-            src.h = enemies[i]->h;
-            dest.x = enemies[i]->x;
-            dest.y = enemies[i]->y;
+            src.w = enemies[i]->pos.w;
+            src.h = enemies[i]->pos.h;
+            dest.x = enemies[i]->pos.x;
+            dest.y = enemies[i]->pos.y;
 
             SDL_BlitSurface(enemies[i]->gfx,&src,screen,&dest);
         }

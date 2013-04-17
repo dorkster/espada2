@@ -36,13 +36,13 @@ void hazardLogic() {
     for (i=0; i<HAZARD_MAX; i++) {
         if (hazards[i] != NULL) {
             if (hazards[i]->active) {
-                hazards[i]->x += hazards[i]->speed_x;
-                hazards[i]->y += hazards[i]->speed_y;
+                hazards[i]->pos.x += hazards[i]->speed_x;
+                hazards[i]->pos.y += hazards[i]->speed_y;
             }
-            if (hazards[i]->x < 0-HAZARD_SIZE ||
-                hazards[i]->x > SCREEN_WIDTH ||
-                hazards[i]->y < 0-HAZARD_SIZE ||
-                hazards[i]->y > SCREEN_HEIGHT) {
+            if (hazards[i]->pos.x < 0-HAZARD_SIZE ||
+                hazards[i]->pos.x > SCREEN_WIDTH ||
+                hazards[i]->pos.y < 0-HAZARD_SIZE ||
+                hazards[i]->pos.y > SCREEN_HEIGHT) {
                 hazardReset(i);
             }
         }
@@ -60,8 +60,10 @@ void hazardAdd(int src, int gfx, int x, int y, float angle, int speed) {
             hazards[i]->active = true;
             hazards[i]->src = src;
             hazards[i]->gfx = gfx;
-            hazards[i]->x = x;
-            hazards[i]->y = y;
+            hazards[i]->pos.x = x;
+            hazards[i]->pos.y = y;
+            hazards[i]->pos.w = HAZARD_SIZE;
+            hazards[i]->pos.h = HAZARD_SIZE;
 
             // calcuate speed
             float theta = angle * pi / 180.0f;

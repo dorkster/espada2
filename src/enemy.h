@@ -27,8 +27,7 @@
 #define ENEMY_MAX 16
 
 typedef struct Enemy{
-    int x,y;
-    int w,h;
+    SDL_Rect pos;
     int speed_x, speed_y;
     int logic;
     SDL_Surface *gfx;

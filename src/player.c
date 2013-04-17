@@ -23,8 +23,10 @@
 #include "sys.h"
 
 void playerInit() {
-    player.x = (SCREEN_WIDTH/2) - (PLAYERW/2);
-    player.y = SCREEN_HEIGHT - PLAYERH - 64;
+    player.pos.x = (SCREEN_WIDTH/2) - (PLAYERW/2);
+    player.pos.y = SCREEN_HEIGHT - PLAYERH - 64;
+    player.pos.w = PLAYERW;
+    player.pos.h = PLAYERH;
 }
 
 void playerLogic() {
@@ -35,23 +37,23 @@ void playerLogic() {
 void playerMove() {
     int speed = 4;
 
-    if (action_left) player.x -= speed;
-    else if (action_right) player.x += speed;
-    if (action_up) player.y -= speed;
-    else if (action_down) player.y += speed;
+    if (action_left) player.pos.x -= speed;
+    else if (action_right) player.pos.x += speed;
+    if (action_up) player.pos.y -= speed;
+    else if (action_down) player.pos.y += speed;
 
-    if (player.x < 0) player.x = 0;
-    else if (player.x > SCREEN_WIDTH-PLAYERW) player.x = SCREEN_WIDTH-PLAYERW;
-    if (player.y < 0) player.y = 0;
-    else if (player.y > SCREEN_HEIGHT-PLAYERH-32) player.y = SCREEN_HEIGHT-PLAYERH-32;
+    if (player.pos.x < 0) player.pos.x = 0;
+    else if (player.pos.x > SCREEN_WIDTH-player.pos.w) player.pos.x = SCREEN_WIDTH-player.pos.w;
+    if (player.pos.y < 0) player.pos.y = 0;
+    else if (player.pos.y > SCREEN_HEIGHT-player.pos.h-32) player.pos.y = SCREEN_HEIGHT-player.pos.h-32;
 }
 
 void playerShoot() {
     if (action_cooldown > 0) return;
 
     if (action_main1) {
-        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.x, player.y, 10, 8);
-        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.x+PLAYERW-HAZARD_SIZE, player.y, -10, 8);
+        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.pos.x, player.pos.y, 10, 8);
+        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.pos.x+player.pos.w-HAZARD_SIZE, player.pos.y, -10, 8);
     }
 
     action_cooldown = ACTION_COOLDOWN;

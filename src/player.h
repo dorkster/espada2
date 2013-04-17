@@ -19,11 +19,13 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "sys.h"
+
 #define PLAYERW 128
 #define PLAYERH 64
 
 typedef struct Player{
-    int x,y;
+    SDL_Rect pos;
 }Player;
 
 Player player;
