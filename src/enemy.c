@@ -25,12 +25,16 @@
 
 Enemy* enemies[ENEMY_MAX];
 int enemy_total = 0;
+int enemy_wave_timer = 0;
 
 void enemyInit() {
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
         enemyReset(i);
     }
+
+    enemy_total = 0;
+    enemy_wave_timer = ENEMY_WAVE_TIMER/2;
 }
 
 void enemyLogic() {
@@ -43,9 +47,9 @@ void enemyLogic() {
                 if (enemies[i]->logic == ENEMY_LOGIC1) {
                     enemies[i]->pos.y += enemies[i]->speed_y;
                     if (enemies[i]->shoot_timer == 0) {
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x, enemies[i]->pos.y+enemies[i]->pos.h, 225, 4);
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE, enemies[i]->pos.y+enemies[i]->pos.h, 135, 4);
-                        enemies[i]->shoot_timer = 120;
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x, enemies[i]->pos.y+enemies[i]->pos.h, 225, 5);
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE, enemies[i]->pos.y+enemies[i]->pos.h, 135, 5);
+                        enemies[i]->shoot_timer = 180;
                     } else enemies[i]->shoot_timer--;
                 }
             }
@@ -101,6 +105,14 @@ void enemyReset(int i) {
 }
 
 void enemyCreateWave() {
+    if (enemy_wave_timer > 0) {
+        enemy_wave_timer--;
+        return;
+    } else {
+        enemy_wave_timer = ENEMY_WAVE_TIMER;
+    }
+
+
     if (enemy_total > 0) return;
 
     // TODO make this change based on level

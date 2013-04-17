@@ -25,6 +25,7 @@
 #define ENEMY_GFX1 0
 
 #define ENEMY_MAX 16
+#define ENEMY_WAVE_TIMER FPS * 10
 
 typedef struct Enemy{
     SDL_Rect pos;
@@ -37,6 +38,7 @@ typedef struct Enemy{
 
 Enemy* enemies[ENEMY_MAX];
 int enemy_total;
+int enemy_wave_timer;
 
 void enemyInit();
 void enemyLogic();
