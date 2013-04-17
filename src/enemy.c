@@ -47,9 +47,9 @@ void enemyLogic() {
                 if (enemies[i]->logic == ENEMY_LOGIC1) {
                     enemies[i]->pos.y += enemies[i]->speed_y;
                     if (enemies[i]->shoot_timer == 0) {
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x, enemies[i]->pos.y+enemies[i]->pos.h, 225, 5);
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE, enemies[i]->pos.y+enemies[i]->pos.h, 135, 5);
-                        enemies[i]->shoot_timer = 180;
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x, enemies[i]->pos.y+enemies[i]->pos.h, 200, 5);
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE, enemies[i]->pos.y+enemies[i]->pos.h, 160, 5);
+                        enemies[i]->shoot_timer = 120;
                     } else enemies[i]->shoot_timer--;
                 }
             }
@@ -69,7 +69,7 @@ void enemyAdd(int logic, int gfx, int x, int y) {
 
             enemies[i]->active = true;
             enemies[i]->logic = logic;
-            enemies[i]->shoot_timer = 0;
+            enemies[i]->shoot_timer = 120;
 
             // set up graphics
             if (gfx == ENEMY_GFX1) {
