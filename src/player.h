@@ -21,8 +21,8 @@
 
 #include "sys.h"
 
-#define PLAYERW 128
-#define PLAYERH 64
+#define PLAYERW 104
+#define PLAYERH 57
 
 typedef struct Player{
     SDL_Rect pos;
