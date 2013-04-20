@@ -448,3 +448,7 @@ bool sysCollide(SDL_Rect* A, SDL_Rect* B) {
 int sysGetXCenter(SDL_Rect A) {
     return A.x + (A.w/2);
 }
+
+int sysRandBetween(int low, int high) {
+    return rand() % (high - low + 1) + low;
+}

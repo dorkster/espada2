@@ -48,8 +48,8 @@ void enemyLogic() {
                 if (enemies[i]->move_timer == 0) {
                     enemies[i]->move_timer = enemies[i]->move_timer_max;
 
-                    // save our position temporarily so it can be reset if needed
-                    SDL_Rect old_pos = enemies[i]->pos;
+                    // save our x position temporarily so it can be reset if needed
+                    int old_x = enemies[i]->pos.x;
 
                     // move vertically
                     // TODO add a boss type that stops once its on screen
@@ -68,7 +68,7 @@ void enemyLogic() {
                     for (j=0; j<ENEMY_MAX; j++) {
                         if (enemies[j] != NULL) {
                             if (i != j && enemies[i]->active && enemies[j]->active) {
-                                if (sysCollide(&enemies[i]->pos, &enemies[j]->pos)) enemies[i]->pos = old_pos;
+                                if (sysCollide(&enemies[i]->pos, &enemies[j]->pos)) enemies[i]->pos.x = old_x;
                             }
                         }
                     }
@@ -76,7 +76,7 @@ void enemyLogic() {
 
                 // shoot
                 if (enemies[i]->shoot_timer == 0) {
-                    enemies[i]->shoot_timer = enemies[i]->shoot_timer_max;
+                    enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);
 
                     if (enemies[i]->logic == ENEMY_LOGIC1) {
                         hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+(enemies[i]->pos.w/2)-HAZARD_SIZE/2, enemies[i]->pos.y+enemies[i]->pos.h, 180, 5);
@@ -106,9 +106,12 @@ void enemyAdd(int logic, int gfx, int sector) {
                 enemies[i]->gfx = surface_enemy1;
                 enemies[i]->pos.w = 32;
                 enemies[i]->pos.h = 32;
-                enemies[i]->shoot_timer = enemies[i]->shoot_timer_max = 90;
+                enemies[i]->shoot_timer_max = 90;
                 enemies[i]->move_timer_max = 1;
             }
+
+            // randomize the shooting timer
+            enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);
 
             // we center the enemy on the given x pos
             enemies[i]->pos.x = (sector*(SCREEN_WIDTH/8)) - (enemies[i]->pos.w/2);
@@ -149,8 +152,10 @@ void enemyCreateWave() {
 
     // TODO make this change based on level
 
+    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 0);
     enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 2);
     enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 6);
+    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 8);
 }
 
 void enemyKill(int i) {

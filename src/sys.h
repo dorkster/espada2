@@ -91,6 +91,7 @@ void sysHighScoresSave();
 void sysHighScoresClear();
 bool sysCollide(SDL_Rect* A, SDL_Rect* B);
 int sysGetXCenter(SDL_Rect A);
+int sysRandBetween(int low, int high);
 
 // Images
 SDL_Surface* surface_bar;
