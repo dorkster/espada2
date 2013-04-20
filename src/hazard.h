@@ -27,7 +27,7 @@
 #define HAZARD_GFX2 1
 
 #define HAZARD_MAX 256
-#define HAZARD_SIZE 16
+#define HAZARD_SIZE 8
 
 typedef struct Hazard{
     SDL_Rect pos;

@@ -52,10 +52,9 @@ void enemyLogic() {
 
                 // shoot
                 if (enemies[i]->shoot_timer == 0) {
+                    enemies[i]->shoot_timer = enemies[i]->shoot_timer_max;
                     if (enemies[i]->logic == ENEMY_LOGIC1) {
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x, enemies[i]->pos.y+enemies[i]->pos.h, 200, 5);
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE, enemies[i]->pos.y+enemies[i]->pos.h, 160, 5);
-                        enemies[i]->shoot_timer = 120;
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+(enemies[i]->pos.w/2)-HAZARD_SIZE/2, enemies[i]->pos.y+enemies[i]->pos.h, 180, 5);
                     }
                 } else enemies[i]->shoot_timer--;
             }
@@ -75,13 +74,13 @@ void enemyAdd(int logic, int gfx, int x, int y) {
 
             enemies[i]->active = true;
             enemies[i]->logic = logic;
-            enemies[i]->shoot_timer = 120;
 
             // set up graphics
             if (gfx == ENEMY_GFX1) {
                 enemies[i]->gfx = surface_enemy1;
-                enemies[i]->pos.w = 64;
+                enemies[i]->pos.w = 32;
                 enemies[i]->pos.h = 32;
+                enemies[i]->shoot_timer = enemies[i]->shoot_timer_max = 90;
             }
 
             // we center the enemy on the given x pos

@@ -52,8 +52,8 @@ void playerShoot() {
     if (action_cooldown > 0) return;
 
     if (action_main1) {
-        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.pos.x, player.pos.y, 10, 10);
-        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.pos.x+player.pos.w-HAZARD_SIZE, player.pos.y, -10, 10);
+        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.pos.x, player.pos.y, 0, 10);
+        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.pos.x+player.pos.w-HAZARD_SIZE, player.pos.y, 0, 10);
     }
 
     action_cooldown = ACTION_COOLDOWN;
