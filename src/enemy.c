@@ -56,7 +56,7 @@ void enemyLogic() {
                     enemies[i]->pos.y += enemies[i]->speed_y;
 
                     // if enemy is homing type, move horizontally to match player
-                    if (enemies[i]->logic == ENEMY_LOGIC1) {
+                    if (enemies[i]->type == ENEMY_TYPE1) {
                         if (sysGetXCenter(enemies[i]->pos) < sysGetXCenter(player.pos))
                             enemies[i]->pos.x += enemies[i]->speed_x;
                         if (sysGetXCenter(enemies[i]->pos) > sysGetXCenter(player.pos))
@@ -78,8 +78,13 @@ void enemyLogic() {
                 if (enemies[i]->shoot_timer == 0) {
                     enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);
 
-                    if (enemies[i]->logic == ENEMY_LOGIC1) {
+                    if (enemies[i]->type == ENEMY_TYPE1) {
                         hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+(enemies[i]->pos.w/2)-HAZARD_SIZE/2, enemies[i]->pos.y+enemies[i]->pos.h, 180, 5);
+                    } else if (enemies[i]->type == ENEMY_TYPE2) {
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x-HAZARD_SIZE/2, enemies[i]->pos.y-HAZARD_SIZE/2, 315, 5);
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE/2, enemies[i]->pos.y-HAZARD_SIZE/2, 45, 5);
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x-HAZARD_SIZE/2, enemies[i]->pos.y+enemies[i]->pos.h-HAZARD_SIZE/2, 225, 5);
+                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE/2, enemies[i]->pos.y+enemies[i]->pos.h-HAZARD_SIZE/2, 135, 5);
                     }
                 } else enemies[i]->shoot_timer--;
             }
@@ -90,7 +95,7 @@ void enemyLogic() {
     }
 }
 
-void enemyAdd(int logic, int gfx, int sector) {
+void enemyAdd(int type, int sector) {
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] == NULL) {
@@ -98,16 +103,26 @@ void enemyAdd(int logic, int gfx, int sector) {
             if (enemies[i] == NULL) return;
 
             enemies[i]->active = true;
-            enemies[i]->logic = logic;
+            enemies[i]->type = type;
             enemies[i]->move_timer = 0;
 
-            // set up graphics
-            if (gfx == ENEMY_GFX1) {
+            // set variables by enemy type
+            if (type == ENEMY_TYPE1) {
                 enemies[i]->gfx = surface_enemy1;
                 enemies[i]->pos.w = 32;
                 enemies[i]->pos.h = 32;
                 enemies[i]->shoot_timer_max = 90;
                 enemies[i]->move_timer_max = 1;
+                enemies[i]->speed_x = 1;
+                enemies[i]->speed_y = 1;
+            } else if (type == ENEMY_TYPE2) {
+                enemies[i]->gfx = surface_enemy2;
+                enemies[i]->pos.w = 48;
+                enemies[i]->pos.h = 48;
+                enemies[i]->shoot_timer_max = 180;
+                enemies[i]->move_timer_max = 1;
+                enemies[i]->speed_x = 0;
+                enemies[i]->speed_y = 2;
             }
 
             // randomize the shooting timer
@@ -117,12 +132,6 @@ void enemyAdd(int logic, int gfx, int sector) {
             enemies[i]->pos.x = (sector*(SCREEN_WIDTH/8)) - (enemies[i]->pos.w/2);
             // y will typically be 0, so this will start enemies off screen
             enemies[i]->pos.y = -enemies[i]->pos.h;
-
-            // set speed
-            if (logic == ENEMY_LOGIC1) {
-                enemies[i]->speed_x = 1;
-                enemies[i]->speed_y = 1;
-            }
 
             enemy_total++;
             break;
@@ -152,10 +161,10 @@ void enemyCreateWave() {
 
     // TODO make this change based on level
 
-    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 0);
-    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 2);
-    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 6);
-    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 8);
+    enemyAdd(ENEMY_TYPE1, 0);
+    enemyAdd(ENEMY_TYPE1, 2);
+    enemyAdd(ENEMY_TYPE1, 6);
+    enemyAdd(ENEMY_TYPE1, 8);
 }
 
 void enemyKill(int i) {

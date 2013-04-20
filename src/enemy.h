@@ -21,8 +21,8 @@
 
 #include "sys.h"
 
-#define ENEMY_LOGIC1 0
-#define ENEMY_GFX1 0
+#define ENEMY_TYPE1 0
+#define ENEMY_TYPE2 1
 
 #define ENEMY_MAX 16
 #define ENEMY_WAVE_TIMER FPS * 10
@@ -30,7 +30,7 @@
 typedef struct Enemy{
     SDL_Rect pos;
     int speed_x, speed_y;
-    int logic;
+    int type;
     SDL_Surface *gfx;
     bool active;
     int shoot_timer, shoot_timer_max;
@@ -43,7 +43,7 @@ int enemy_wave_timer;
 
 void enemyInit();
 void enemyLogic();
-void enemyAdd(int logic, int gfx, int sector);
+void enemyAdd(int type, int sector);
 void enemyReset(int i);
 void enemyCreateWave();
 void enemyKill(int i);

@@ -38,6 +38,9 @@ SDL_Surface* surface_background = NULL;
 SDL_Surface* surface_title = NULL;
 SDL_Surface* surface_highscores = NULL;
 SDL_Surface* surface_player = NULL;
+SDL_Surface* surface_hazards = NULL;
+SDL_Surface* surface_enemy1 = NULL;
+SDL_Surface* surface_enemy2 = NULL;
 Mix_Music* music = NULL;
 Mix_Chunk* sound_menu = NULL;
 Mix_Chunk* sound_switch = NULL;
@@ -159,6 +162,14 @@ bool sysLoadFiles() {
         SDL_FreeSurface(cleanup);
     }
 
+    surface_enemy2 = IMG_Load(PKGDATADIR "/graphics/enemy2.png");
+    if (!surface_enemy2) return false;
+    else {
+        SDL_Surface *cleanup = surface_enemy2;
+        surface_enemy2 = SDL_DisplayFormatAlpha(surface_enemy2);
+        SDL_FreeSurface(cleanup);
+    }
+
     // background music
     // music = Mix_LoadMUS(PKGDATADIR "/sounds/music.ogg");
     // if (!music) return false;
@@ -187,6 +198,7 @@ void sysCleanup() {
     SDL_FreeSurface(surface_player);
     SDL_FreeSurface(surface_hazards);
     SDL_FreeSurface(surface_enemy1);
+    SDL_FreeSurface(surface_enemy2);
     Mix_FreeMusic(music);
     Mix_FreeChunk(sound_menu);
     Mix_FreeChunk(sound_switch);
