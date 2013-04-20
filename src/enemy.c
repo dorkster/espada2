@@ -21,6 +21,7 @@
 
 #include "enemy.h"
 #include "hazard.h"
+#include "player.h"
 #include "sys.h"
 
 Enemy* enemies[ENEMY_MAX];
@@ -45,18 +46,38 @@ void enemyLogic() {
         if (enemies[i] != NULL) {
             if (enemies[i]->active) {
                 if (enemies[i]->move_timer == 0) {
+                    enemies[i]->move_timer = enemies[i]->move_timer_max;
+
+                    // save our position temporarily so it can be reset if needed
+                    SDL_Rect old_pos = enemies[i]->pos;
+
                     // move vertically
                     // TODO add a boss type that stops once its on screen
                     enemies[i]->pos.y += enemies[i]->speed_y;
 
-                    // TODO if enemy is homing type, move horizontally to match player
+                    // if enemy is homing type, move horizontally to match player
+                    if (enemies[i]->logic == ENEMY_LOGIC1) {
+                        if (sysGetXCenter(enemies[i]->pos) < sysGetXCenter(player.pos))
+                            enemies[i]->pos.x += enemies[i]->speed_x;
+                        if (sysGetXCenter(enemies[i]->pos) > sysGetXCenter(player.pos))
+                            enemies[i]->pos.x -= enemies[i]->speed_x;
+                    }
 
-                    enemies[i]->move_timer = enemies[i]->move_timer_max;
+                    // if we're colliding with another enemy, reset the position
+                    int j;
+                    for (j=0; j<ENEMY_MAX; j++) {
+                        if (enemies[j] != NULL) {
+                            if (i != j && enemies[i]->active && enemies[j]->active) {
+                                if (sysCollide(&enemies[i]->pos, &enemies[j]->pos)) enemies[i]->pos = old_pos;
+                            }
+                        }
+                    }
                 } else enemies[i]->move_timer--;
 
                 // shoot
                 if (enemies[i]->shoot_timer == 0) {
                     enemies[i]->shoot_timer = enemies[i]->shoot_timer_max;
+
                     if (enemies[i]->logic == ENEMY_LOGIC1) {
                         hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+(enemies[i]->pos.w/2)-HAZARD_SIZE/2, enemies[i]->pos.y+enemies[i]->pos.h, 180, 5);
                     }
@@ -96,7 +117,7 @@ void enemyAdd(int logic, int gfx, int x, int y) {
 
             // set speed
             if (logic == ENEMY_LOGIC1) {
-                enemies[i]->speed_x = 0;
+                enemies[i]->speed_x = 2;
                 enemies[i]->speed_y = 1;
             }
 

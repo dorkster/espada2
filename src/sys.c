@@ -445,3 +445,6 @@ bool sysCollide(SDL_Rect* A, SDL_Rect* B) {
     return true;
 }
 
+int sysGetXCenter(SDL_Rect A) {
+    return A.x + (A.w/2);
+}

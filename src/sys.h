@@ -90,6 +90,7 @@ void sysHighScoresLoad();
 void sysHighScoresSave();
 void sysHighScoresClear();
 bool sysCollide(SDL_Rect* A, SDL_Rect* B);
+int sysGetXCenter(SDL_Rect A);
 
 // Images
 SDL_Surface* surface_bar;
