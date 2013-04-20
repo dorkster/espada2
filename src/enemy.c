@@ -44,14 +44,20 @@ void enemyLogic() {
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] != NULL) {
             if (enemies[i]->active) {
-                if (enemies[i]->logic == ENEMY_LOGIC1) {
-                    enemies[i]->pos.y += enemies[i]->speed_y;
-                    if (enemies[i]->shoot_timer == 0) {
+                // move vertically
+                // TODO add a boss type that stops once its on screen
+                enemies[i]->pos.y += enemies[i]->speed_y;
+
+                // TODO if enemy is homing type, move horizontally to match player
+
+                // shoot
+                if (enemies[i]->shoot_timer == 0) {
+                    if (enemies[i]->logic == ENEMY_LOGIC1) {
                         hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x, enemies[i]->pos.y+enemies[i]->pos.h, 200, 5);
                         hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE, enemies[i]->pos.y+enemies[i]->pos.h, 160, 5);
                         enemies[i]->shoot_timer = 120;
-                    } else enemies[i]->shoot_timer--;
-                }
+                    }
+                } else enemies[i]->shoot_timer--;
             }
             if (enemies[i]->pos.y > SCREEN_HEIGHT) {
                 enemyReset(i);
