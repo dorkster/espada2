@@ -33,8 +33,8 @@ typedef struct Enemy{
     int logic;
     SDL_Surface *gfx;
     bool active;
-    int shoot_timer;
-    int shoot_timer_max;
+    int shoot_timer, shoot_timer_max;
+    int move_timer, move_timer_max;
 }Enemy;
 
 Enemy* enemies[ENEMY_MAX];

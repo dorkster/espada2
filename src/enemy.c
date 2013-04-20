@@ -44,11 +44,15 @@ void enemyLogic() {
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] != NULL) {
             if (enemies[i]->active) {
-                // move vertically
-                // TODO add a boss type that stops once its on screen
-                enemies[i]->pos.y += enemies[i]->speed_y;
+                if (enemies[i]->move_timer == 0) {
+                    // move vertically
+                    // TODO add a boss type that stops once its on screen
+                    enemies[i]->pos.y += enemies[i]->speed_y;
 
-                // TODO if enemy is homing type, move horizontally to match player
+                    // TODO if enemy is homing type, move horizontally to match player
+
+                    enemies[i]->move_timer = enemies[i]->move_timer_max;
+                } else enemies[i]->move_timer--;
 
                 // shoot
                 if (enemies[i]->shoot_timer == 0) {
@@ -74,6 +78,7 @@ void enemyAdd(int logic, int gfx, int x, int y) {
 
             enemies[i]->active = true;
             enemies[i]->logic = logic;
+            enemies[i]->move_timer = 0;
 
             // set up graphics
             if (gfx == ENEMY_GFX1) {
@@ -81,6 +86,7 @@ void enemyAdd(int logic, int gfx, int x, int y) {
                 enemies[i]->pos.w = 32;
                 enemies[i]->pos.h = 32;
                 enemies[i]->shoot_timer = enemies[i]->shoot_timer_max = 90;
+                enemies[i]->move_timer_max = 2;
             }
 
             // we center the enemy on the given x pos
