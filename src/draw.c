@@ -97,11 +97,9 @@ void drawInfo() {
     else SDL_BlitSurface(surface_bar,NULL,screen,&dest);
 
     // statusbar text
-    if (game_over) sprintf(text,"Score: %-10d  Game Over!",score);
-    else {
-        if (paused) sprintf(text,"Score: %-10d  *Paused*",score);
-        else sprintf(text,"Score: %-10d",score);
-    }
+    sprintf(text, "Score: %-10d  Level: %-3d",score,level);
+    if (game_over) sprintf(text,"%s  Game Over!",text);
+    else if (paused) sprintf(text,"%s  *Paused*",text);
 
     text_info = TTF_RenderText_Blended(font,text,color);
     if(text_info) {

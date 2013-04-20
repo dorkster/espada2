@@ -47,6 +47,7 @@ Mix_Chunk* sound_switch = NULL;
 SDL_Joystick* joy = NULL;
 
 int score = 0;
+int level = 0;
 bool title_screen = true;
 bool high_scores_screen = false;
 int options_screen = -1;

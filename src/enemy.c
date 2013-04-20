@@ -129,7 +129,7 @@ void enemyAdd(int type, int sector) {
             enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);
 
             // we center the enemy on the given x pos
-            enemies[i]->pos.x = (sector*(SCREEN_WIDTH/8)) - (enemies[i]->pos.w/2);
+            enemies[i]->pos.x = (sector*(SCREEN_WIDTH/8)) + (SCREEN_WIDTH/16) - (enemies[i]->pos.w/2);
             // y will typically be 0, so this will start enemies off screen
             enemies[i]->pos.y = -enemies[i]->pos.h;
 
@@ -161,10 +161,17 @@ void enemyCreateWave() {
 
     // TODO make this change based on level
 
-    enemyAdd(ENEMY_TYPE1, 0);
-    enemyAdd(ENEMY_TYPE1, 2);
-    enemyAdd(ENEMY_TYPE1, 6);
-    enemyAdd(ENEMY_TYPE1, 8);
+    if (level % 2  == 0) {
+        enemyAdd(ENEMY_TYPE1, 0);
+        enemyAdd(ENEMY_TYPE1, 2);
+        enemyAdd(ENEMY_TYPE1, 5);
+        enemyAdd(ENEMY_TYPE1, 7);
+    } else if (level % 2 == 1) {
+        enemyAdd(ENEMY_TYPE2, 1);
+        enemyAdd(ENEMY_TYPE2, 6);
+    }
+
+    if (enemy_total > 0) level++;
 }
 
 void enemyKill(int i) {

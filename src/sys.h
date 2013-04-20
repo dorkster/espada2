@@ -46,6 +46,7 @@ SDL_Surface* screen;
 TTF_Font* font;
 
 int score;
+int level;
 int high_scores[10];
 bool title_screen;
 bool high_scores_screen;

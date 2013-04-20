@@ -66,6 +66,7 @@ void gameOptions() {
 void gameInit() {
     title_screen = false;
     score = 0;
+    level = 0;
 
     Mix_VolumeMusic(option_music*16);
     if (!game_over) Mix_PlayMusic(music,-1);
