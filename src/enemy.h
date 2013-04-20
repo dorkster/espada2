@@ -43,7 +43,7 @@ int enemy_wave_timer;
 
 void enemyInit();
 void enemyLogic();
-void enemyAdd(int logic, int gfx, int x, int y);
+void enemyAdd(int logic, int gfx, int sector);
 void enemyReset(int i);
 void enemyCreateWave();
 void enemyKill(int i);

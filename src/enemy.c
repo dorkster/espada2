@@ -90,7 +90,7 @@ void enemyLogic() {
     }
 }
 
-void enemyAdd(int logic, int gfx, int x, int y) {
+void enemyAdd(int logic, int gfx, int sector) {
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] == NULL) {
@@ -107,17 +107,17 @@ void enemyAdd(int logic, int gfx, int x, int y) {
                 enemies[i]->pos.w = 32;
                 enemies[i]->pos.h = 32;
                 enemies[i]->shoot_timer = enemies[i]->shoot_timer_max = 90;
-                enemies[i]->move_timer_max = 2;
+                enemies[i]->move_timer_max = 1;
             }
 
             // we center the enemy on the given x pos
-            enemies[i]->pos.x = x - (enemies[i]->pos.w/2);
+            enemies[i]->pos.x = (sector*(SCREEN_WIDTH/8)) - (enemies[i]->pos.w/2);
             // y will typically be 0, so this will start enemies off screen
-            enemies[i]->pos.y = y - enemies[i]->pos.h;
+            enemies[i]->pos.y = -enemies[i]->pos.h;
 
             // set speed
             if (logic == ENEMY_LOGIC1) {
-                enemies[i]->speed_x = 2;
+                enemies[i]->speed_x = 1;
                 enemies[i]->speed_y = 1;
             }
 
@@ -149,8 +149,8 @@ void enemyCreateWave() {
 
     // TODO make this change based on level
 
-    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 128, 0);
-    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, SCREEN_WIDTH-128, 0);
+    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 2);
+    enemyAdd(ENEMY_LOGIC1, ENEMY_GFX1, 6);
 }
 
 void enemyKill(int i) {
