@@ -45,7 +45,7 @@ void playerMove() {
     if (player.pos.x < 0) player.pos.x = 0;
     else if (player.pos.x > SCREEN_WIDTH-player.pos.w) player.pos.x = SCREEN_WIDTH-player.pos.w;
     if (player.pos.y < 0) player.pos.y = 0;
-    else if (player.pos.y > SCREEN_HEIGHT-player.pos.h-32) player.pos.y = SCREEN_HEIGHT-player.pos.h-32;
+    else if (player.pos.y > SCREEN_HEIGHT-player.pos.h-MENUBAR_SIZE) player.pos.y = SCREEN_HEIGHT-player.pos.h-MENUBAR_SIZE;
 }
 
 void playerShoot() {

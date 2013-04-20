@@ -31,6 +31,7 @@ typedef enum { false = 0, true = 1 } bool;
 #define FPS 60
 #define JOY_DEADZONE 100
 #define ACTION_COOLDOWN 10 / (60/FPS)
+#define MENUBAR_SIZE 24
 
 #define OPTIONS_MAIN 0
 #define OPTIONS_JOYSTICK 1

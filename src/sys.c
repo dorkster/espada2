@@ -90,7 +90,7 @@ bool sysInit() {
 
 bool sysLoadFiles() {
     // font
-    font = TTF_OpenFont(PKGDATADIR "/fonts/VDS_Italic_New.ttf",24);
+    font = TTF_OpenFont(PKGDATADIR "/fonts/VDS_Italic_New.ttf",18);
     if(!font) return false;
     else TTF_SetFontHinting(font, TTF_HINTING_LIGHT);
 
