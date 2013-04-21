@@ -81,7 +81,9 @@ void gameInit() {
 }
 
 void gameCleanup() {
+    hazardCleanup();
     enemyCleanup();
+    playerCleanup();
 }
 
 void gameLogic() {

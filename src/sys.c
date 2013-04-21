@@ -417,6 +417,10 @@ int sysGetXCenter(SDL_Rect A) {
     return A.x + (A.w/2);
 }
 
+int sysGetYCenter(SDL_Rect A) {
+    return A.y + (A.h/2);
+}
+
 int sysRandBetween(int low, int high) {
     return rand() % (high - low + 1) + low;
 }

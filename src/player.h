@@ -19,16 +19,20 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "hazard.h"
 #include "sys.h"
 
 typedef struct Player{
     SDL_Rect pos;
     int speed;
+    HazardDef* bullets;
+    int bullet_count;
 }Player;
 
 Player player;
 
 void playerInit();
+void playerCleanup();
 void playerLogic();
 void playerMove();
 void playerShoot();

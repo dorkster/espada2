@@ -37,11 +37,20 @@ typedef struct Hazard{
     bool active;
 }Hazard;
 
+typedef struct HazardDef{
+    int x_offset;
+    int y_offset;
+    int angle;
+    int speed;
+}HazardDef;
+
 Hazard* hazards[HAZARD_MAX];
 
 void hazardInit();
 void hazardLogic();
 void hazardAdd(int src, int gfx, int x, int y, float angle, int speed);
 void hazardReset(int i);
+void hazardCleanup();
+HazardDef* hazardDefAdd(int size, HazardDef* def, int x_offset, int y_offset, int angle, int speed);
 
 #endif

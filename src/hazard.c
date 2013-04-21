@@ -82,3 +82,21 @@ void hazardReset(int i) {
         hazards[i] = NULL;
     }
 }
+
+void hazardCleanup() {
+    int i;
+    for (i=0; i<HAZARD_MAX; i++) {
+        hazardReset(i);
+    }
+}
+
+HazardDef* hazardDefAdd(int size, HazardDef* def, int x_offset, int y_offset, int angle, int speed) {
+    def = realloc(def,sizeof(HazardDef)*size);
+    if (def != NULL) {
+        def[size-1].x_offset = x_offset;
+        def[size-1].y_offset = y_offset;
+        def[size-1].angle = angle;
+        def[size-1].speed = speed;
+    }
+    return def;
+}

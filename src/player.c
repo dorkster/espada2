@@ -24,17 +24,36 @@
 #include "sys.h"
 
 void playerInit() {
+    player.speed = 4;
+    player.bullets = NULL;
+    player.bullet_count = 0;
+
     // load some stats from a config file
     fileOpen(PKGDATADIR "/configs/player.txt");
     while(fileNext()) {
         if (!strcmp("width",fileGetKey())) player.pos.w = atoi(fileGetVal());
         else if (!strcmp("height",fileGetKey())) player.pos.h = atoi(fileGetVal());
         else if (!strcmp("speed",fileGetKey())) player.speed = atoi(fileGetVal());
+        else if (!strcmp("bullet",fileGetKey())) {
+            int x_offset = atoi(fileGetValNext());
+            int y_offset = atoi(fileGetValNext());
+            int angle = atoi(fileGetValNext());
+            int speed = atoi(fileGetValNext());
+            player.bullet_count++;
+            player.bullets = hazardDefAdd(player.bullet_count, player.bullets, x_offset, y_offset, angle, speed);
+        }
     }
     fileClose();
 
     player.pos.x = (SCREEN_WIDTH/2) - (player.pos.w/2);
     player.pos.y = SCREEN_HEIGHT - player.pos.h - 64;
+}
+
+void playerCleanup() {
+    if (player.bullets != NULL) {
+        free(player.bullets);
+        player.bullets = NULL;
+    }
 }
 
 void playerLogic() {
@@ -58,8 +77,15 @@ void playerShoot() {
     if (action_cooldown > 0) return;
 
     if (action_main1) {
-        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.pos.x, player.pos.y, 0, 10);
-        hazardAdd(HAZARD_PLAYER, HAZARD_GFX1, player.pos.x+player.pos.w-HAZARD_SIZE, player.pos.y, 0, 10);
+        int i;
+        for (i=0; i<player.bullet_count; i++) {
+            hazardAdd(HAZARD_PLAYER,
+                      HAZARD_GFX1,
+                      sysGetXCenter(player.pos)+player.bullets[i].x_offset-(HAZARD_SIZE/2),
+                      sysGetYCenter(player.pos)+player.bullets[i].y_offset-(HAZARD_SIZE/2),
+                      (float)player.bullets[i].angle,
+                      player.bullets[i].speed);
+        }
     }
 
     action_cooldown = ACTION_COOLDOWN;

@@ -3,3 +3,5 @@ width=56
 height=32
 
 speed=4
+bullet=-28,-16,0,10
+bullet=28,-16,0,10

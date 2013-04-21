@@ -9,7 +9,7 @@ speed_y=1
 shoot_time=60
 move_time=1
 homing=1
-boss=0
+bullet=0,16,180,5
 
 id=2
 gfx=1
@@ -19,6 +19,8 @@ speed_x=1
 speed_y=1
 shoot_time=90
 move_time=2
-homing=0
-boss=0
+bullet=-16,-16,315,5
+bullet=16,-16,45,5
+bullet=-16,16,225,5
+bullet=16,16,135,5
 

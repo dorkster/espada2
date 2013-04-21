@@ -19,10 +19,8 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include "hazard.h"
 #include "sys.h"
-
-#define ENEMY_TYPE1 1
-#define ENEMY_TYPE2 2
 
 #define ENEMY_MAX 8
 
@@ -36,6 +34,8 @@ typedef struct Enemy{
     int move_timer, move_timer_max;
     int homing;
     int boss;
+    HazardDef *bullets;
+    int bullet_count;
 }Enemy;
 
 typedef struct EnemyWave{
@@ -52,6 +52,7 @@ int enemy_wave_timer;
 int enemy_wave_timer_max;
 
 void enemyInit();
+void enemyInitEnemy(Enemy* e);
 void enemyInitWave(EnemyWave* wave);
 void enemyCleanup();
 void enemyLogic();

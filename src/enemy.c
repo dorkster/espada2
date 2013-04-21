@@ -53,6 +53,7 @@ void enemyInit() {
             if (current_type > enemy_type_max) {
                 enemy_type_max = current_type;
                 enemy_stats = realloc(enemy_stats, sizeof(Enemy) * enemy_type_max);
+                enemyInitEnemy(&enemy_stats[current_type-1]);
                 enemy_stats[current_type-1].type = current_type;
             }
         } else if (current_type > 0) {
@@ -68,6 +69,14 @@ void enemyInit() {
             else if (!strcmp("move_time",fileGetKey())) enemy_stats[current_type-1].move_timer_max = atoi(fileGetVal());
             else if (!strcmp("homing",fileGetKey())) enemy_stats[current_type-1].homing = atoi(fileGetVal());
             else if (!strcmp("boss",fileGetKey())) enemy_stats[current_type-1].boss = atoi(fileGetVal());
+            else if (!strcmp("bullet",fileGetKey())) {
+                int x_offset = atoi(fileGetValNext());
+                int y_offset = atoi(fileGetValNext());
+                int angle = atoi(fileGetValNext());
+                int speed = atoi(fileGetValNext());
+                enemy_stats[current_type-1].bullet_count++;
+                enemy_stats[current_type-1].bullets = hazardDefAdd(enemy_stats[current_type-1].bullet_count, enemy_stats[current_type-1].bullets, x_offset, y_offset, angle, speed);
+            }
         }
     }
     fileClose();
@@ -98,6 +107,20 @@ void enemyInit() {
     enemy_wave_timer = enemy_wave_timer_max/2;
 }
 
+void enemyInitEnemy(Enemy* e) {
+    e->pos.x = e->pos.y = e->pos.w = e->pos.h = 0;
+    e->speed_x = e->speed_y = 0;
+    e->type = 0;
+    e->gfx = NULL;
+    e->active = false;
+    e->shoot_timer = e->shoot_timer_max = 0;
+    e->move_timer = e->move_timer_max = 0;
+    e->homing = 0;
+    e->boss = 0;
+    e->bullets = NULL;
+    e->bullet_count = 0;
+}
+
 void enemyInitWave(EnemyWave* wave) {
     int i;
     for (i=0; i<8; i++) {
@@ -106,12 +129,19 @@ void enemyInitWave(EnemyWave* wave) {
 }
 
 void enemyCleanup() {
-    if (enemy_stats != NULL) free(enemy_stats);
-    enemy_stats = NULL;
+    int i;
+    if (enemy_stats != NULL) {
+        for (i=0; i<enemy_type_max; i++) {
+            if (enemy_stats[i].bullets != NULL) {
+                free(enemy_stats[i].bullets);
+            }
+        }
+        free(enemy_stats);
+        enemy_stats = NULL;
+    }
     if (enemy_wave != NULL) free(enemy_wave);
     enemy_wave = NULL;
 
-    int i;
     for (i=0; i<ENEMY_MAX; i++) {
         enemyReset(i);
     }
@@ -159,13 +189,14 @@ void enemyLogic() {
                 if (enemies[i]->shoot_timer == 0) {
                     enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);
 
-                    if (enemies[i]->type == ENEMY_TYPE1) {
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+(enemies[i]->pos.w/2)-HAZARD_SIZE/2, enemies[i]->pos.y+enemies[i]->pos.h, 180, 5);
-                    } else if (enemies[i]->type == ENEMY_TYPE2) {
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x-HAZARD_SIZE/2, enemies[i]->pos.y-HAZARD_SIZE/2, 315, 5);
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE/2, enemies[i]->pos.y-HAZARD_SIZE/2, 45, 5);
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x-HAZARD_SIZE/2, enemies[i]->pos.y+enemies[i]->pos.h-HAZARD_SIZE/2, 225, 5);
-                        hazardAdd(HAZARD_ENEMY, HAZARD_GFX2, enemies[i]->pos.x+enemies[i]->pos.w-HAZARD_SIZE/2, enemies[i]->pos.y+enemies[i]->pos.h-HAZARD_SIZE/2, 135, 5);
+                    int k;
+                    for (k=0; k<enemies[i]->bullet_count; k++) {
+                        hazardAdd(HAZARD_ENEMY,
+                                  HAZARD_GFX2,
+                                  sysGetXCenter(enemies[i]->pos)+enemies[i]->bullets[k].x_offset-(HAZARD_SIZE/2),
+                                  sysGetYCenter(enemies[i]->pos)+enemies[i]->bullets[k].y_offset-(HAZARD_SIZE/2),
+                                  (float)enemies[i]->bullets[k].angle,
+                                  enemies[i]->bullets[k].speed);
                     }
                 } else enemies[i]->shoot_timer--;
             }
@@ -199,6 +230,8 @@ void enemyAdd(int type, int sector) {
             enemies[i]->move_timer_max = enemy_stats[type-1].move_timer_max;
             enemies[i]->homing = enemy_stats[type-1].homing;
             enemies[i]->boss = enemy_stats[type-1].boss;
+            enemies[i]->bullets = enemy_stats[type-1].bullets;
+            enemies[i]->bullet_count = enemy_stats[type-1].bullet_count;
 
             // randomize the shooting timer
             enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);
