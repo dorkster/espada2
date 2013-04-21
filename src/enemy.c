@@ -45,29 +45,29 @@ void enemyInit() {
     enemy_level_max = 0;
 
     // load enemy definitions
-    int current_type = -1;
+    int current_type = 0;
     fileOpen(PKGDATADIR "/configs/enemies.txt");
     while(fileNext()) {
         if (!strcmp("id",fileGetKey())) {
             current_type = atoi(fileGetVal());
-            if (current_type >= enemy_type_max) {
+            if (current_type > enemy_type_max) {
                 enemy_type_max = current_type;
-                enemy_stats = realloc(enemy_stats, sizeof(Enemy) * (current_type+1));
-                enemy_stats[current_type].type = current_type;
+                enemy_stats = realloc(enemy_stats, sizeof(Enemy) * enemy_type_max);
+                enemy_stats[current_type-1].type = current_type;
             }
-        } else if (current_type > -1) {
+        } else if (current_type > 0) {
             if (!strcmp("gfx",fileGetKey())) {
-                if (atoi(fileGetVal()) == 0) enemy_stats[current_type].gfx = surface_enemy1;
-                else if (atoi(fileGetVal()) == 1) enemy_stats[current_type].gfx = surface_enemy2;
+                if (atoi(fileGetVal()) == 0) enemy_stats[current_type-1].gfx = surface_enemy1;
+                else if (atoi(fileGetVal()) == 1) enemy_stats[current_type-1].gfx = surface_enemy2;
             }
-            else if (!strcmp("width",fileGetKey())) enemy_stats[current_type].pos.w = atoi(fileGetVal());
-            else if (!strcmp("height",fileGetKey())) enemy_stats[current_type].pos.h = atoi(fileGetVal());
-            else if (!strcmp("speed_x",fileGetKey())) enemy_stats[current_type].speed_x = atoi(fileGetVal());
-            else if (!strcmp("speed_y",fileGetKey())) enemy_stats[current_type].speed_y = atoi(fileGetVal());
-            else if (!strcmp("shoot_time",fileGetKey())) enemy_stats[current_type].shoot_timer_max = atoi(fileGetVal());
-            else if (!strcmp("move_time",fileGetKey())) enemy_stats[current_type].move_timer_max = atoi(fileGetVal());
-            else if (!strcmp("homing",fileGetKey())) enemy_stats[current_type].homing = atoi(fileGetVal());
-            else if (!strcmp("boss",fileGetKey())) enemy_stats[current_type].boss = atoi(fileGetVal());
+            else if (!strcmp("width",fileGetKey())) enemy_stats[current_type-1].pos.w = atoi(fileGetVal());
+            else if (!strcmp("height",fileGetKey())) enemy_stats[current_type-1].pos.h = atoi(fileGetVal());
+            else if (!strcmp("speed_x",fileGetKey())) enemy_stats[current_type-1].speed_x = atoi(fileGetVal());
+            else if (!strcmp("speed_y",fileGetKey())) enemy_stats[current_type-1].speed_y = atoi(fileGetVal());
+            else if (!strcmp("shoot_time",fileGetKey())) enemy_stats[current_type-1].shoot_timer_max = atoi(fileGetVal());
+            else if (!strcmp("move_time",fileGetKey())) enemy_stats[current_type-1].move_timer_max = atoi(fileGetVal());
+            else if (!strcmp("homing",fileGetKey())) enemy_stats[current_type-1].homing = atoi(fileGetVal());
+            else if (!strcmp("boss",fileGetKey())) enemy_stats[current_type-1].boss = atoi(fileGetVal());
         }
     }
     fileClose();
@@ -86,11 +86,10 @@ void enemyInit() {
                 enemyInitWave(&enemy_wave[current_level-1]);
             }
         } else if (current_level > 0 && current_level <= enemy_level_max) {
-            for (i=0; i<8; i++) {
-                char sector_name[7];
-                sprintf(sector_name,"sector%d",i);
-                if (!strcmp(sector_name,fileGetKey()))
-                    enemy_wave[current_level-1].sector[i] = atoi(fileGetVal());
+            if (!strcmp("wave",fileGetKey())) {
+                for (i=0; i<8; i++) {
+                    enemy_wave[current_level-1].sector[i] = atoi(fileGetValNext());
+                }
             }
         }
     }
@@ -178,7 +177,7 @@ void enemyLogic() {
 }
 
 void enemyAdd(int type, int sector) {
-    if (type == -1 || type > enemy_type_max) return;
+    if (type == 0 || type > enemy_type_max) return;
 
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
@@ -191,15 +190,15 @@ void enemyAdd(int type, int sector) {
             enemies[i]->move_timer = 0;
 
             // set variables by enemy type
-            enemies[i]->gfx = enemy_stats[type].gfx;
-            enemies[i]->pos.w = enemy_stats[type].pos.w;
-            enemies[i]->pos.h = enemy_stats[type].pos.h;
-            enemies[i]->speed_x = enemy_stats[type].speed_x;
-            enemies[i]->speed_y = enemy_stats[type].speed_y;
-            enemies[i]->shoot_timer_max = enemy_stats[type].shoot_timer_max;
-            enemies[i]->move_timer_max = enemy_stats[type].move_timer_max;
-            enemies[i]->homing = enemy_stats[type].homing;
-            enemies[i]->boss = enemy_stats[type].boss;
+            enemies[i]->gfx = enemy_stats[type-1].gfx;
+            enemies[i]->pos.w = enemy_stats[type-1].pos.w;
+            enemies[i]->pos.h = enemy_stats[type-1].pos.h;
+            enemies[i]->speed_x = enemy_stats[type-1].speed_x;
+            enemies[i]->speed_y = enemy_stats[type-1].speed_y;
+            enemies[i]->shoot_timer_max = enemy_stats[type-1].shoot_timer_max;
+            enemies[i]->move_timer_max = enemy_stats[type-1].move_timer_max;
+            enemies[i]->homing = enemy_stats[type-1].homing;
+            enemies[i]->boss = enemy_stats[type-1].boss;
 
             // randomize the shooting timer
             enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);

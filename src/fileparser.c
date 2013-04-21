@@ -25,6 +25,8 @@ char file_buffer[BUFSIZ];
 char *file_line = NULL;
 char *file_key = NULL;
 char *file_val = NULL;
+char *file_val_next = NULL;
+int file_val_cursor = 0;
 
 // implement strdup here since C99 doesn't have it
 char *strdup(const char *str) {
@@ -45,6 +47,11 @@ FILE* fileOpen(char *filename) {
 char* fileNext() {
     file_key = NULL;
     file_val = NULL;
+    if (file_val_next != NULL) {
+        free(file_val_next);
+        file_val_next = NULL;
+    }
+    file_val_cursor = 0;
 
     if (file_file == NULL) return NULL;
 
@@ -70,15 +77,48 @@ char* fileGetVal() {
     else return "";
 }
 
+char* fileGetValNext() {
+    if (file_val_next != NULL) {
+        free(file_val_next);
+        file_val_next = NULL;
+    }
+    int i;
+    int len = strlen(file_val);
+    int new_cursor = 0;
+    for (i=file_val_cursor; i<=len; i++) {
+        if (file_val[i] != ',' && file_val[i] != '\n') {
+            file_val_cursor++;
+            new_cursor++;
+            file_val_next = realloc(file_val_next, file_val_cursor);
+            file_val_next[new_cursor-1] = file_val[i];
+        } else {
+            file_val_cursor++;
+            new_cursor++;
+            file_val_next = realloc(file_val_next, file_val_cursor);
+            file_val_next[new_cursor-1] = '\0';
+            break;
+        }
+    }
+    if (file_val_next) return file_val_next;
+    else return "";
+}
+
 char* fileGetLine() {
     if (file_line) return file_line;
     else return "";
 }
 
 void fileClose() {
+    if (file_val_next != NULL)
+        free(file_val_next);
     if (file_line != NULL)
         free(file_line);
     if (file_file != NULL)
         fclose(file_file);
+
+    file_key = NULL;
+    file_val = NULL;
+    file_val_next = NULL;
+    file_val_cursor = 0;
 }
 

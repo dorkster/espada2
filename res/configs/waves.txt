@@ -1,21 +1,14 @@
 wave_time=8
 
 level=1
-sector0=0
-sector7=0
+wave=1,0,0,0,0,0,0,1
 
 level=2
-sector1=1
-sector6=1
+wave=0,2,0,0,0,0,2,0
 
 level=3
-sector0=0
-sector1=0
-sector6=0
-sector7=0
+wave=1,1,0,0,0,0,1,1
 
 level=4
-sector1=1
-sector2=0
-sector5=0
-sector6=1
+wave=0,2,1,0,0,1,2,0
+

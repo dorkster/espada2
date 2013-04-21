@@ -21,8 +21,8 @@
 
 #include "sys.h"
 
-#define ENEMY_TYPE1 0
-#define ENEMY_TYPE2 1
+#define ENEMY_TYPE1 1
+#define ENEMY_TYPE2 2
 
 #define ENEMY_MAX 8
 

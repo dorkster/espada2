@@ -23,12 +23,15 @@ char file_buffer[BUFSIZ];
 char *file_line;
 char *file_key;
 char *file_val;
+char *file_val_next;
+int file_val_cursor;
 
 char *strdup(const char *str);
 FILE* fileOpen(char *filename);
 char* fileNext();
 char* fileGetKey();
 char* fileGetVal();
+char* fileGetValNext();
 char* fileGetLine();
 void fileClose();
 
