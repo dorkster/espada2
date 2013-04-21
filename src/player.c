@@ -24,9 +24,6 @@
 #include "sys.h"
 
 void playerInit() {
-    player.pos.x = (SCREEN_WIDTH/2) - (PLAYERW/2);
-    player.pos.y = SCREEN_HEIGHT - PLAYERH - 64;
-
     // load some stats from a config file
     fileOpen(PKGDATADIR "/configs/player.txt");
     while(fileNext()) {
@@ -35,6 +32,9 @@ void playerInit() {
         else if (!strcmp("speed",fileGetKey())) player.speed = atoi(fileGetVal());
     }
     fileClose();
+
+    player.pos.x = (SCREEN_WIDTH/2) - (player.pos.w/2);
+    player.pos.y = SCREEN_HEIGHT - player.pos.h - 64;
 }
 
 void playerLogic() {

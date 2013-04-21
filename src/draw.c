@@ -176,8 +176,8 @@ void drawPlayer() {
     SDL_Rect src,dest;
 
     src.x = src.y = 0;
-    src.w = PLAYERW;
-    src.h = PLAYERH;
+    src.w = player.pos.w;
+    src.h = player.pos.h;
 
     dest.x = player.pos.x;
     dest.y = player.pos.y;

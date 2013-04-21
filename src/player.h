@@ -21,9 +21,6 @@
 
 #include "sys.h"
 
-#define PLAYERW 56
-#define PLAYERH 32
-
 typedef struct Player{
     SDL_Rect pos;
     int speed;
