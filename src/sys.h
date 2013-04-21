@@ -79,6 +79,7 @@ unsigned int deltaTimer;
 
 // Functions
 bool sysInit();
+SDL_Surface* sysLoadGraphic(char* filename);
 bool sysLoadFiles();
 void sysCleanup();
 void sysInput();
