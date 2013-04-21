@@ -38,6 +38,8 @@ void gameTitle() {
     menuAdd("High Scores");
     menuAdd("Options");
     menuAdd("Quit");
+
+    gameCleanup();
 }
 
 void gameHighScores() {
@@ -76,6 +78,10 @@ void gameInit() {
     playerInit();
     enemyInit();
     hazardInit();
+}
+
+void gameCleanup() {
+    enemyCleanup();
 }
 
 void gameLogic() {

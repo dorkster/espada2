@@ -48,5 +48,6 @@ int main(void) {
         if(deltaTimer < (1000/FPS))
             SDL_Delay((1000/FPS)-deltaTimer);
     }
+    gameCleanup();
     sysCleanup();
 }

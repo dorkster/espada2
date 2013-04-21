@@ -20,13 +20,17 @@
 #include <stdlib.h>
 
 #include "enemy.h"
+#include "fileparser.h"
 #include "hazard.h"
 #include "player.h"
 #include "sys.h"
 
 Enemy* enemies[ENEMY_MAX];
+EnemyWave* enemy_waves;
 int enemy_total = 0;
 int enemy_wave_timer = 0;
+int enemy_wave_timer_max = 0;
+int enemy_level_max = 0;
 
 void enemyInit() {
     int i;
@@ -35,7 +39,40 @@ void enemyInit() {
     }
 
     enemy_total = 0;
-    enemy_wave_timer = ENEMY_WAVE_TIMER/2;
+
+    int current_level = 0;
+    fileOpen(PKGDATADIR "/configs/waves.txt");
+    while(fileNext()) {
+        if (!strcmp("wave_time",fileGetKey())) {
+            enemy_wave_timer_max = FPS * atoi(fileGetVal());
+        } else if (!strcmp("level",fileGetKey())) {
+            current_level = atoi(fileGetVal());
+            if (current_level > enemy_level_max) {
+                enemy_level_max = current_level;
+                enemy_wave = realloc(enemy_wave, sizeof(EnemyWave) * enemy_level_max);
+                enemyWaveInit(&enemy_wave[current_level-1]);
+            }
+        }
+
+        if (current_level > 0 && current_level <= enemy_level_max) {
+            for (i=0; i<8; i++) {
+                char sector_name[7];
+                sprintf(sector_name,"sector%d",i);
+                if (!strcmp(sector_name,fileGetKey())) {
+                    if (atoi(fileGetVal()) == 0) enemy_wave[current_level-1].sector[i] = ENEMY_TYPE1;
+                    else if (atoi(fileGetVal()) == 1) enemy_wave[current_level-1].sector[i] = ENEMY_TYPE2;
+                }
+            }
+        }
+    }
+    fileClose();
+
+    enemy_wave_timer = enemy_wave_timer_max/2;
+}
+
+void enemyCleanup() {
+    if (enemy_wave != NULL) free(enemy_wave);
+    enemy_wave = NULL;
 }
 
 void enemyLogic() {
@@ -96,6 +133,8 @@ void enemyLogic() {
 }
 
 void enemyAdd(int type, int sector) {
+    if (type == -1) return;
+
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] == NULL) {
@@ -152,26 +191,27 @@ void enemyCreateWave() {
     if (enemy_wave_timer > 0) {
         enemy_wave_timer--;
         return;
-    } else {
-        enemy_wave_timer = ENEMY_WAVE_TIMER;
     }
 
-
     if (enemy_total > 0) return;
+    if (enemy_level_max == 0) return;
 
-    // TODO make this change based on level
+    enemy_wave_timer = enemy_wave_timer_max;
 
-    if (level % 2  == 0) {
-        enemyAdd(ENEMY_TYPE1, 0);
-        enemyAdd(ENEMY_TYPE1, 2);
-        enemyAdd(ENEMY_TYPE1, 5);
-        enemyAdd(ENEMY_TYPE1, 7);
-    } else if (level % 2 == 1) {
-        enemyAdd(ENEMY_TYPE2, 1);
-        enemyAdd(ENEMY_TYPE2, 6);
+    int wave = level % enemy_level_max;
+    int i;
+    for (i=0; i<8; i++) {
+        enemyAdd(enemy_wave[wave].sector[i],i);
     }
 
     if (enemy_total > 0) level++;
+}
+
+void enemyWaveInit(EnemyWave* wave) {
+    int i;
+    for (i=0; i<8; i++) {
+        wave->sector[i] = -1;
+    }
 }
 
 void enemyKill(int i) {

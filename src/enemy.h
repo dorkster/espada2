@@ -24,8 +24,7 @@
 #define ENEMY_TYPE1 0
 #define ENEMY_TYPE2 1
 
-#define ENEMY_MAX 16
-#define ENEMY_WAVE_TIMER FPS * 10
+#define ENEMY_MAX 8
 
 typedef struct Enemy{
     SDL_Rect pos;
@@ -37,15 +36,24 @@ typedef struct Enemy{
     int move_timer, move_timer_max;
 }Enemy;
 
+typedef struct EnemyWave{
+    int sector[8];
+}EnemyWave;
+
 Enemy* enemies[ENEMY_MAX];
+EnemyWave* enemy_wave;
 int enemy_total;
 int enemy_wave_timer;
+int enemy_wave_timer_max;
+int enemy_level_max;
 
 void enemyInit();
+void enemyCleanup();
 void enemyLogic();
 void enemyAdd(int type, int sector);
 void enemyReset(int i);
 void enemyCreateWave();
+void enemyWaveInit(EnemyWave* wave);
 void enemyKill(int i);
 
 #endif

@@ -23,6 +23,7 @@ void gameTitle();
 void gameHighScores();
 void gameOptions();
 void gameInit();
+void gameCleanup();
 void gameLogic();
 void gameOver();
 void gamePause();
