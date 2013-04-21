@@ -26,11 +26,13 @@
 #include "sys.h"
 
 Enemy* enemies[ENEMY_MAX];
-EnemyWave* enemy_waves;
+Enemy* enemy_stats;
+EnemyWave* enemy_wave;
 int enemy_total = 0;
+int enemy_type_max = 0;
+int enemy_level_max = 0;
 int enemy_wave_timer = 0;
 int enemy_wave_timer_max = 0;
-int enemy_level_max = 0;
 
 void enemyInit() {
     int i;
@@ -39,7 +41,37 @@ void enemyInit() {
     }
 
     enemy_total = 0;
+    enemy_type_max = 0;
+    enemy_level_max = 0;
 
+    // load enemy definitions
+    int current_type = -1;
+    fileOpen(PKGDATADIR "/configs/enemies.txt");
+    while(fileNext()) {
+        if (!strcmp("id",fileGetKey())) {
+            current_type = atoi(fileGetVal());
+            if (current_type >= enemy_type_max) {
+                enemy_type_max = current_type;
+                enemy_stats = realloc(enemy_stats, sizeof(Enemy) * (current_type+1));
+                enemy_stats[current_type].type = current_type;
+            }
+        } else if (current_type > -1) {
+            if (!strcmp("gfx",fileGetKey())) {
+                if (atoi(fileGetVal()) == 0) enemy_stats[current_type].gfx = surface_enemy1;
+                else if (atoi(fileGetVal()) == 1) enemy_stats[current_type].gfx = surface_enemy2;
+            }
+            else if (!strcmp("width",fileGetKey())) enemy_stats[current_type].pos.w = atoi(fileGetVal());
+            else if (!strcmp("height",fileGetKey())) enemy_stats[current_type].pos.h = atoi(fileGetVal());
+            else if (!strcmp("speed_x",fileGetKey())) enemy_stats[current_type].speed_x = atoi(fileGetVal());
+            else if (!strcmp("speed_y",fileGetKey())) enemy_stats[current_type].speed_y = atoi(fileGetVal());
+            else if (!strcmp("shoot_time",fileGetKey())) enemy_stats[current_type].shoot_timer_max = atoi(fileGetVal());
+            else if (!strcmp("move_time",fileGetKey())) enemy_stats[current_type].move_timer_max = atoi(fileGetVal());
+            else if (!strcmp("homing",fileGetKey())) enemy_stats[current_type].homing = atoi(fileGetVal());
+        }
+    }
+    fileClose();
+
+    // load level layouts
     int current_level = 0;
     fileOpen(PKGDATADIR "/configs/waves.txt");
     while(fileNext()) {
@@ -50,18 +82,14 @@ void enemyInit() {
             if (current_level > enemy_level_max) {
                 enemy_level_max = current_level;
                 enemy_wave = realloc(enemy_wave, sizeof(EnemyWave) * enemy_level_max);
-                enemyWaveInit(&enemy_wave[current_level-1]);
+                enemyInitWave(&enemy_wave[current_level-1]);
             }
-        }
-
-        if (current_level > 0 && current_level <= enemy_level_max) {
+        } else if (current_level > 0 && current_level <= enemy_level_max) {
             for (i=0; i<8; i++) {
                 char sector_name[7];
                 sprintf(sector_name,"sector%d",i);
-                if (!strcmp(sector_name,fileGetKey())) {
-                    if (atoi(fileGetVal()) == 0) enemy_wave[current_level-1].sector[i] = ENEMY_TYPE1;
-                    else if (atoi(fileGetVal()) == 1) enemy_wave[current_level-1].sector[i] = ENEMY_TYPE2;
-                }
+                if (!strcmp(sector_name,fileGetKey()))
+                    enemy_wave[current_level-1].sector[i] = atoi(fileGetVal());
             }
         }
     }
@@ -70,9 +98,23 @@ void enemyInit() {
     enemy_wave_timer = enemy_wave_timer_max/2;
 }
 
+void enemyInitWave(EnemyWave* wave) {
+    int i;
+    for (i=0; i<8; i++) {
+        wave->sector[i] = -1;
+    }
+}
+
 void enemyCleanup() {
+    if (enemy_stats != NULL) free(enemy_stats);
+    enemy_stats = NULL;
     if (enemy_wave != NULL) free(enemy_wave);
     enemy_wave = NULL;
+
+    int i;
+    for (i=0; i<ENEMY_MAX; i++) {
+        enemyReset(i);
+    }
 }
 
 void enemyLogic() {
@@ -93,7 +135,7 @@ void enemyLogic() {
                     enemies[i]->pos.y += enemies[i]->speed_y;
 
                     // if enemy is homing type, move horizontally to match player
-                    if (enemies[i]->type == ENEMY_TYPE1) {
+                    if (enemies[i]->homing == 1) {
                         if (sysGetXCenter(enemies[i]->pos) < sysGetXCenter(player.pos))
                             enemies[i]->pos.x += enemies[i]->speed_x;
                         if (sysGetXCenter(enemies[i]->pos) > sysGetXCenter(player.pos))
@@ -133,7 +175,7 @@ void enemyLogic() {
 }
 
 void enemyAdd(int type, int sector) {
-    if (type == -1) return;
+    if (type == -1 || type > enemy_type_max) return;
 
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
@@ -146,23 +188,14 @@ void enemyAdd(int type, int sector) {
             enemies[i]->move_timer = 0;
 
             // set variables by enemy type
-            if (type == ENEMY_TYPE1) {
-                enemies[i]->gfx = surface_enemy1;
-                enemies[i]->pos.w = 32;
-                enemies[i]->pos.h = 32;
-                enemies[i]->shoot_timer_max = 90;
-                enemies[i]->move_timer_max = 1;
-                enemies[i]->speed_x = 1;
-                enemies[i]->speed_y = 1;
-            } else if (type == ENEMY_TYPE2) {
-                enemies[i]->gfx = surface_enemy2;
-                enemies[i]->pos.w = 48;
-                enemies[i]->pos.h = 48;
-                enemies[i]->shoot_timer_max = 180;
-                enemies[i]->move_timer_max = 1;
-                enemies[i]->speed_x = 0;
-                enemies[i]->speed_y = 2;
-            }
+            enemies[i]->gfx = enemy_stats[type].gfx;
+            enemies[i]->pos.w = enemy_stats[type].pos.w;
+            enemies[i]->pos.h = enemy_stats[type].pos.h;
+            enemies[i]->speed_x = enemy_stats[type].speed_x;
+            enemies[i]->speed_y = enemy_stats[type].speed_y;
+            enemies[i]->shoot_timer_max = enemy_stats[type].shoot_timer_max;
+            enemies[i]->move_timer_max = enemy_stats[type].move_timer_max;
+            enemies[i]->homing = enemy_stats[type].homing;
 
             // randomize the shooting timer
             enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);
@@ -205,13 +238,6 @@ void enemyCreateWave() {
     }
 
     if (enemy_total > 0) level++;
-}
-
-void enemyWaveInit(EnemyWave* wave) {
-    int i;
-    for (i=0; i<8; i++) {
-        wave->sector[i] = -1;
-    }
 }
 
 void enemyKill(int i) {

@@ -1,0 +1,22 @@
+# TODO move gfx, width, height to animation file
+
+id=0
+gfx=0
+width=32
+height=32
+speed_x=1
+speed_y=1
+shoot_time=60
+move_time=1
+homing=1
+
+id=1
+gfx=1
+width=48
+height=48
+speed_x=2
+speed_y=2
+shoot_time=90
+move_time=2
+homing=0
+

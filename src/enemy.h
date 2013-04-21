@@ -34,6 +34,7 @@ typedef struct Enemy{
     bool active;
     int shoot_timer, shoot_timer_max;
     int move_timer, move_timer_max;
+    int homing;
 }Enemy;
 
 typedef struct EnemyWave{
@@ -41,19 +42,21 @@ typedef struct EnemyWave{
 }EnemyWave;
 
 Enemy* enemies[ENEMY_MAX];
+Enemy* enemy_stats;
 EnemyWave* enemy_wave;
 int enemy_total;
+int enemy_type_max;
+int enemy_level_max;
 int enemy_wave_timer;
 int enemy_wave_timer_max;
-int enemy_level_max;
 
 void enemyInit();
+void enemyInitWave(EnemyWave* wave);
 void enemyCleanup();
 void enemyLogic();
 void enemyAdd(int type, int sector);
 void enemyReset(int i);
 void enemyCreateWave();
-void enemyWaveInit(EnemyWave* wave);
 void enemyKill(int i);
 
 #endif
