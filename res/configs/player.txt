@@ -1,0 +1,5 @@
+# TODO move these dimensions to an animation file
+width=56
+height=32
+
+speed=4

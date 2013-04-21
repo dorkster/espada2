@@ -18,6 +18,7 @@
 
 #include <stdlib.h>
 
+#include "fileparser.h"
 #include "hazard.h"
 #include "player.h"
 #include "sys.h"
@@ -25,8 +26,15 @@
 void playerInit() {
     player.pos.x = (SCREEN_WIDTH/2) - (PLAYERW/2);
     player.pos.y = SCREEN_HEIGHT - PLAYERH - 64;
-    player.pos.w = PLAYERW;
-    player.pos.h = PLAYERH;
+
+    // load some stats from a config file
+    fileOpen(PKGDATADIR "/configs/player.txt");
+    while(fileNext()) {
+        if (!strcmp("width",fileGetKey())) player.pos.w = atoi(fileGetVal());
+        else if (!strcmp("height",fileGetKey())) player.pos.h = atoi(fileGetVal());
+        else if (!strcmp("speed",fileGetKey())) player.speed = atoi(fileGetVal());
+    }
+    fileClose();
 }
 
 void playerLogic() {
@@ -35,12 +43,10 @@ void playerLogic() {
 }
 
 void playerMove() {
-    int speed = 4;
-
-    if (action_left) player.pos.x -= speed;
-    else if (action_right) player.pos.x += speed;
-    if (action_up) player.pos.y -= speed;
-    else if (action_down) player.pos.y += speed;
+    if (action_left) player.pos.x -= player.speed;
+    else if (action_right) player.pos.x += player.speed;
+    if (action_up) player.pos.y -= player.speed;
+    else if (action_down) player.pos.y += player.speed;
 
     if (player.pos.x < 0) player.pos.x = 0;
     else if (player.pos.x > SCREEN_WIDTH-player.pos.w) player.pos.x = SCREEN_WIDTH-player.pos.w;

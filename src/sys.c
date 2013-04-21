@@ -28,6 +28,7 @@
 #include "SDL/SDL_ttf.h"
 #include "SDL/SDL_mixer.h"
 
+#include "fileparser.h"
 #include "sys.h"
 
 SDL_Surface* screen = NULL;
@@ -311,29 +312,20 @@ void sysConfigSetFolder() {
 }
 
 void sysConfigLoad() {
-    FILE *config_file;
-    char buffer[BUFSIZ];
-    char *key;
-    char *temp;
-
     mkdir(config_folder, S_IRWXU | S_IRWXG | S_IRWXO);
     char *config_path = malloc(strlen(config_folder)+strlen("/config")+1);
 
     if (config_path) {
         sprintf(config_path,"%s/config",config_folder);
-        config_file = fopen(config_path,"r+");
 
-        if (config_file) {
-            while (fgets(buffer,BUFSIZ,config_file)) {
-                temp = buffer;
-                if (temp[0] == '#') continue;
-                key = strtok(temp,"=");
-                if (strcmp(key,"joystick") == 0) option_joystick = atoi(strtok(NULL,"\n"));
-                if (strcmp(key,"sound") == 0) option_sound = atoi(strtok(NULL,"\n"));
-                if (strcmp(key,"music") == 0) option_music = atoi(strtok(NULL,"\n"));
-                if (strcmp(key,"fullscreen") == 0) option_fullscreen = atoi(strtok(NULL,"\n"));
+        if (fileOpen(config_path)) {
+            while(fileNext()) {
+                if (!strcmp("joystick",fileGetKey())) option_joystick = atoi(fileGetVal());
+                else if (!strcmp("sound",fileGetKey())) option_sound = atoi(fileGetVal());
+                else if (!strcmp("music",fileGetKey())) option_music = atoi(fileGetVal());
+                else if (!strcmp("fullscreen",fileGetKey())) option_fullscreen = atoi(fileGetVal());
             }
-            fclose(config_file);
+            fileClose();
             sysConfigApply();
         } else {
             printf ("Error: Couldn't load config file. Creating new config...\n");
@@ -388,9 +380,6 @@ void sysConfigApply() {
 }
 
 void sysHighScoresLoad() {
-    FILE *file;
-    char buffer[BUFSIZ];
-    char *temp;
     int i = 0;
 
     mkdir(config_folder, S_IRWXU | S_IRWXG | S_IRWXO);
@@ -398,16 +387,14 @@ void sysHighScoresLoad() {
 
     if (path) {
         sprintf(path,"%s/highscores",config_folder);
-        file = fopen(path,"r+");
 
-        if (file) {
-            while (fgets(buffer,BUFSIZ,file)) {
-                temp = buffer;
-                if (i < 10) high_scores[i] = atoi(strtok(temp,"\n"));
+        if (fileOpen(path)) {
+            while (fileNext()) {
+                if (i < 10) high_scores[i] = atoi(fileGetLine());
                 else break;
                 i++;
             }
-            fclose(file);
+            fileClose();
         } else {
             printf ("Error: Couldn't load high scores.\n");
             sysHighScoresSave();
@@ -465,3 +452,4 @@ int sysGetXCenter(SDL_Rect A) {
 int sysRandBetween(int low, int high) {
     return rand() % (high - low + 1) + low;
 }
+

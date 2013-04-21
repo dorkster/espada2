@@ -16,25 +16,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#include <stdio.h>
 
-#include "sys.h"
+FILE *file_file;
+char file_buffer[BUFSIZ];
+char *file_line;
+char *file_key;
+char *file_val;
 
-#define PLAYERW 56
-#define PLAYERH 32
+char *strdup(const char *str);
+FILE* fileOpen(char *filename);
+char* fileNext();
+char* fileGetKey();
+char* fileGetVal();
+char* fileGetLine();
+void fileClose();
 
-typedef struct Player{
-    SDL_Rect pos;
-    int speed;
-}Player;
-
-Player player;
-
-void playerInit();
-void playerLogic();
-void playerMove();
-void playerShoot();
-void playerKill();
-
-#endif
