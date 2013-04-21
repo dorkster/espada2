@@ -67,6 +67,7 @@ void enemyInit() {
             else if (!strcmp("shoot_time",fileGetKey())) enemy_stats[current_type].shoot_timer_max = atoi(fileGetVal());
             else if (!strcmp("move_time",fileGetKey())) enemy_stats[current_type].move_timer_max = atoi(fileGetVal());
             else if (!strcmp("homing",fileGetKey())) enemy_stats[current_type].homing = atoi(fileGetVal());
+            else if (!strcmp("boss",fileGetKey())) enemy_stats[current_type].boss = atoi(fileGetVal());
         }
     }
     fileClose();
@@ -131,8 +132,10 @@ void enemyLogic() {
                     int old_x = enemies[i]->pos.x;
 
                     // move vertically
-                    // TODO add a boss type that stops once its on screen
-                    enemies[i]->pos.y += enemies[i]->speed_y;
+                    // bosses will stop once they are fully on screen
+                    if (enemies[i]->boss == 0 || enemies[i]->pos.y <= 0) {
+                        enemies[i]->pos.y += enemies[i]->speed_y;
+                    }
 
                     // if enemy is homing type, move horizontally to match player
                     if (enemies[i]->homing == 1) {
@@ -196,6 +199,7 @@ void enemyAdd(int type, int sector) {
             enemies[i]->shoot_timer_max = enemy_stats[type].shoot_timer_max;
             enemies[i]->move_timer_max = enemy_stats[type].move_timer_max;
             enemies[i]->homing = enemy_stats[type].homing;
+            enemies[i]->boss = enemy_stats[type].boss;
 
             // randomize the shooting timer
             enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);

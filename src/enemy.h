@@ -35,6 +35,7 @@ typedef struct Enemy{
     int shoot_timer, shoot_timer_max;
     int move_timer, move_timer_max;
     int homing;
+    int boss;
 }Enemy;
 
 typedef struct EnemyWave{
