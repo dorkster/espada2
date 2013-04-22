@@ -102,7 +102,6 @@ SDL_Surface* surface_bar_inactive;
 SDL_Surface* surface_background;
 SDL_Surface* surface_title;
 SDL_Surface* surface_highscores;
-SDL_Surface* surface_player;
 SDL_Surface* surface_hazards;
 SDL_Surface* surface_enemy1;
 SDL_Surface* surface_enemy2;

@@ -5,3 +5,4 @@ height=32
 speed=4
 bullet=-28,-16,0,10
 bullet=28,-16,0,10
+animation=/animations/player.txt

@@ -53,6 +53,8 @@ FileParser* fileOpen(char *filename) {
 }
 
 char* fileNext(FileParser* f) {
+    if (f == NULL) return NULL;
+
     f->key = NULL;
     f->val = NULL;
     if (f->val_next != NULL) {
@@ -76,16 +78,22 @@ char* fileNext(FileParser* f) {
 }
 
 char* fileGetKey(FileParser* f) {
+    if (f == NULL) return "";
+
     if (f->key) return f->key;
     else return "";
 }
 
 char* fileGetVal(FileParser* f) {
+    if (f == NULL) return "";
+
     if (f->val) return f->val;
     else return "";
 }
 
 char* fileGetValNext(FileParser* f) {
+    if (f == NULL) return "";
+
     if (f->val_next != NULL) {
         free(f->val_next);
         f->val_next = NULL;
@@ -112,11 +120,15 @@ char* fileGetValNext(FileParser* f) {
 }
 
 char* fileGetLine(FileParser* f) {
+    if (f == NULL) return "";
+
     if (f->line) return f->line;
     else return "";
 }
 
 void fileClose(FileParser *f) {
+    if (f == NULL) return;
+
     if (f->val_next != NULL)
         free(f->val_next);
     if (f->line != NULL)

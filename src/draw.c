@@ -173,16 +173,22 @@ void drawOptions() {
 }
 
 void drawPlayer() {
-    SDL_Rect src,dest;
+    int id = player.anim_current-1;
+    if (&player.anim[id] != NULL) {
+        if (player.anim[id].finished) return;
 
-    src.x = src.y = 0;
-    src.w = player.pos.w;
-    src.h = player.pos.h;
+        SDL_Rect src,dest;
 
-    dest.x = player.pos.x;
-    dest.y = player.pos.y;
+        src.w = player.pos.w;
+        src.h = player.pos.h;
 
-    SDL_BlitSurface(surface_player,&src,screen,&dest);
+        dest.x = player.pos.x;
+        dest.y = player.pos.y;
+
+        src.x = id * src.w; // animation type
+        src.y = player.anim[id].frame_current * src.h; // animation frame
+        SDL_BlitSurface(player.anim[id].gfx,&src,screen,&dest);
+    }
 }
 
 void drawHazards() {

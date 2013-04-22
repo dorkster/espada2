@@ -38,7 +38,6 @@ SDL_Surface* surface_bar_inactive = NULL;
 SDL_Surface* surface_background = NULL;
 SDL_Surface* surface_title = NULL;
 SDL_Surface* surface_highscores = NULL;
-SDL_Surface* surface_player = NULL;
 SDL_Surface* surface_hazards = NULL;
 SDL_Surface* surface_enemy1 = NULL;
 SDL_Surface* surface_enemy2 = NULL;
@@ -128,9 +127,6 @@ bool sysLoadFiles() {
     surface_highscores = sysLoadGraphic(PKGDATADIR "/graphics/highscores.png");
     if (!surface_highscores) return false;
 
-    surface_player = sysLoadGraphic(PKGDATADIR "/graphics/player.png");
-    if (!surface_player) return false;
-
     surface_hazards = sysLoadGraphic(PKGDATADIR "/graphics/hazards.png");
     if (!surface_hazards) return false;
 
@@ -165,7 +161,6 @@ void sysCleanup() {
     SDL_FreeSurface(surface_background);
     SDL_FreeSurface(surface_title);
     SDL_FreeSurface(surface_highscores);
-    SDL_FreeSurface(surface_player);
     SDL_FreeSurface(surface_hazards);
     SDL_FreeSurface(surface_enemy1);
     SDL_FreeSurface(surface_enemy2);

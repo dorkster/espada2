@@ -16,34 +16,30 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef ANIMATION_H
+#define ANIMATION_H
 
-#include "animation.h"
-#include "hazard.h"
 #include "sys.h"
 
-typedef struct Player{
-    SDL_Rect pos;
-    bool alive;
-    int speed;
-    HazardDef* bullets;
-    int bullet_count;
-    Animation* anim;
-    int anim_count;
-    int anim_current;
-}Player;
+#define ANIM_DEFAULT 1
+#define ANIM_DEATH 2
 
-Player player;
+typedef struct Animation{
+    int id;
+    SDL_Surface* gfx;
+    int frame_current;
+    int frame_total;
+    int frame_duration;
+    int frame_ticks;
+    int frame_width;
+    int frame_height;
+    bool looped;
+    bool finished;
+}Animation;
 
-void playerInit();
-void playerCleanup();
-void playerAnimate();
-void playerLogic();
-void playerMove();
-void playerShoot();
-void playerHit();
-bool playerIsDead();
-void playerSetAnimation(int id);
+void animationInit(Animation* anim);
+Animation* animationAdd(Animation* anim, int* anim_count, char* filename);
+void animationCleanup(Animation **anim, int* anim_count);
+void animationAdvanceFrame(Animation *anim);
 
 #endif

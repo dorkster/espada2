@@ -297,7 +297,7 @@ void gameCollide() {
             if (hazards[i]->src == HAZARD_ENEMY && sysCollide(&hazards[i]->pos, &player.pos)) {
                 // hazard hit player
                 hazardReset(i);
-                playerKill();
+                playerHit();
             } else if (hazards[i]->src == HAZARD_PLAYER) {
                 for (j=0; j<ENEMY_MAX; j++) {
                     if (enemies[j] != NULL) {
@@ -318,7 +318,7 @@ void gameCollide() {
             if (enemies[i]->pos.y > 0 && sysCollide(&enemies[i]->pos, &player.pos)) {
                 // player collided with enemy
                 enemyKill(i);
-                playerKill();
+                playerHit();
                 continue;
             }
         }

@@ -1,0 +1,16 @@
+gfx=/graphics/player.png
+
+#default
+id=1
+frame_total=1
+frame_width=56
+frame_height=32
+looped=1
+
+#death
+#id=2
+#frame_total=2
+#frame_duration=15
+#frame_width=56
+#frame_height=32
+#looped=0
