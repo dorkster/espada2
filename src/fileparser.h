@@ -16,22 +16,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef FILEPARSER_H
+#define FILEPARSER_H
+
 #include <stdio.h>
 
-FILE *file_file;
-char file_buffer[BUFSIZ];
-char *file_line;
-char *file_key;
-char *file_val;
-char *file_val_next;
-int file_val_cursor;
+typedef struct FileParser{
+    FILE *file;
+    char buffer[BUFSIZ];
+    char *line;
+    char *key;
+    char *val;
+    char *val_next;
+    int val_cursor;
+}FileParser;
 
 char *strdup(const char *str);
-FILE* fileOpen(char *filename);
-char* fileNext();
-char* fileGetKey();
-char* fileGetVal();
-char* fileGetValNext();
-char* fileGetLine();
-void fileClose();
+FileParser* fileOpen(char *filename);
+char* fileNext(FileParser* f);
+char* fileGetKey(FileParser *f);
+char* fileGetVal(FileParser *f);
+char* fileGetValNext(FileParser* f);
+char* fileGetLine(FileParser *f);
+void fileClose(FileParser *f);
 
+#endif

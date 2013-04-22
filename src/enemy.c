@@ -35,6 +35,8 @@ int enemy_wave_timer = 0;
 int enemy_wave_timer_max = 0;
 
 void enemyInit() {
+    FileParser* f;
+
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
         enemyReset(i);
@@ -46,10 +48,10 @@ void enemyInit() {
 
     // load enemy definitions
     int current_type = 0;
-    fileOpen(PKGDATADIR "/configs/enemies.txt");
-    while(fileNext()) {
-        if (!strcmp("id",fileGetKey())) {
-            current_type = atoi(fileGetVal());
+    f = fileOpen(PKGDATADIR "/configs/enemies.txt");
+    while(fileNext(f)) {
+        if (!strcmp("id",fileGetKey(f))) {
+            current_type = atoi(fileGetVal(f));
             if (current_type > enemy_type_max) {
                 enemy_type_max = current_type;
                 enemy_stats = realloc(enemy_stats, sizeof(Enemy) * enemy_type_max);
@@ -57,52 +59,52 @@ void enemyInit() {
                 enemy_stats[current_type-1].type = current_type;
             }
         } else if (current_type > 0) {
-            if (!strcmp("gfx",fileGetKey())) {
-                if (atoi(fileGetVal()) == 0) enemy_stats[current_type-1].gfx = surface_enemy1;
-                else if (atoi(fileGetVal()) == 1) enemy_stats[current_type-1].gfx = surface_enemy2;
+            if (!strcmp("gfx",fileGetKey(f))) {
+                if (atoi(fileGetVal(f)) == 0) enemy_stats[current_type-1].gfx = surface_enemy1;
+                else if (atoi(fileGetVal(f)) == 1) enemy_stats[current_type-1].gfx = surface_enemy2;
             }
-            else if (!strcmp("width",fileGetKey())) enemy_stats[current_type-1].pos.w = atoi(fileGetVal());
-            else if (!strcmp("height",fileGetKey())) enemy_stats[current_type-1].pos.h = atoi(fileGetVal());
-            else if (!strcmp("speed_x",fileGetKey())) enemy_stats[current_type-1].speed_x = atoi(fileGetVal());
-            else if (!strcmp("speed_y",fileGetKey())) enemy_stats[current_type-1].speed_y = atoi(fileGetVal());
-            else if (!strcmp("shoot_time",fileGetKey())) enemy_stats[current_type-1].shoot_timer_max = atoi(fileGetVal());
-            else if (!strcmp("move_time",fileGetKey())) enemy_stats[current_type-1].move_timer_max = atoi(fileGetVal());
-            else if (!strcmp("homing",fileGetKey())) enemy_stats[current_type-1].homing = atoi(fileGetVal());
-            else if (!strcmp("boss",fileGetKey())) enemy_stats[current_type-1].boss = atoi(fileGetVal());
-            else if (!strcmp("bullet",fileGetKey())) {
-                int x_offset = atoi(fileGetValNext());
-                int y_offset = atoi(fileGetValNext());
-                int angle = atoi(fileGetValNext());
-                int speed = atoi(fileGetValNext());
+            else if (!strcmp("width",fileGetKey(f))) enemy_stats[current_type-1].pos.w = atoi(fileGetVal(f));
+            else if (!strcmp("height",fileGetKey(f))) enemy_stats[current_type-1].pos.h = atoi(fileGetVal(f));
+            else if (!strcmp("speed_x",fileGetKey(f))) enemy_stats[current_type-1].speed_x = atoi(fileGetVal(f));
+            else if (!strcmp("speed_y",fileGetKey(f))) enemy_stats[current_type-1].speed_y = atoi(fileGetVal(f));
+            else if (!strcmp("shoot_time",fileGetKey(f))) enemy_stats[current_type-1].shoot_timer_max = atoi(fileGetVal(f));
+            else if (!strcmp("move_time",fileGetKey(f))) enemy_stats[current_type-1].move_timer_max = atoi(fileGetVal(f));
+            else if (!strcmp("homing",fileGetKey(f))) enemy_stats[current_type-1].homing = atoi(fileGetVal(f));
+            else if (!strcmp("boss",fileGetKey(f))) enemy_stats[current_type-1].boss = atoi(fileGetVal(f));
+            else if (!strcmp("bullet",fileGetKey(f))) {
+                int x_offset = atoi(fileGetValNext(f));
+                int y_offset = atoi(fileGetValNext(f));
+                int angle = atoi(fileGetValNext(f));
+                int speed = atoi(fileGetValNext(f));
                 enemy_stats[current_type-1].bullet_count++;
                 enemy_stats[current_type-1].bullets = hazardDefAdd(enemy_stats[current_type-1].bullet_count, enemy_stats[current_type-1].bullets, x_offset, y_offset, angle, speed);
             }
         }
     }
-    fileClose();
+    fileClose(f);
 
     // load level layouts
     int current_level = 0;
-    fileOpen(PKGDATADIR "/configs/waves.txt");
-    while(fileNext()) {
-        if (!strcmp("wave_time",fileGetKey())) {
-            enemy_wave_timer_max = FPS * atoi(fileGetVal());
-        } else if (!strcmp("level",fileGetKey())) {
-            current_level = atoi(fileGetVal());
+    f = fileOpen(PKGDATADIR "/configs/waves.txt");
+    while(fileNext(f)) {
+        if (!strcmp("wave_time",fileGetKey(f))) {
+            enemy_wave_timer_max = FPS * atoi(fileGetVal(f));
+        } else if (!strcmp("level",fileGetKey(f))) {
+            current_level = atoi(fileGetVal(f));
             if (current_level > enemy_level_max) {
                 enemy_level_max = current_level;
                 enemy_wave = realloc(enemy_wave, sizeof(EnemyWave) * enemy_level_max);
                 enemyInitWave(&enemy_wave[current_level-1]);
             }
         } else if (current_level > 0 && current_level <= enemy_level_max) {
-            if (!strcmp("wave",fileGetKey())) {
+            if (!strcmp("wave",fileGetKey(f))) {
                 for (i=0; i<8; i++) {
-                    enemy_wave[current_level-1].sector[i] = atoi(fileGetValNext());
+                    enemy_wave[current_level-1].sector[i] = atoi(fileGetValNext(f));
                 }
             }
         }
     }
-    fileClose();
+    fileClose(f);
 
     enemy_wave_timer = enemy_wave_timer_max/2;
 }

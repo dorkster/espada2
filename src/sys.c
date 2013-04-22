@@ -280,20 +280,22 @@ void sysConfigSetFolder() {
 }
 
 void sysConfigLoad() {
+    FileParser* f;
     mkdir(config_folder, S_IRWXU | S_IRWXG | S_IRWXO);
     char *config_path = malloc(strlen(config_folder)+strlen("/config")+1);
 
     if (config_path) {
         sprintf(config_path,"%s/config",config_folder);
 
-        if (fileOpen(config_path)) {
-            while(fileNext()) {
-                if (!strcmp("joystick",fileGetKey())) option_joystick = atoi(fileGetVal());
-                else if (!strcmp("sound",fileGetKey())) option_sound = atoi(fileGetVal());
-                else if (!strcmp("music",fileGetKey())) option_music = atoi(fileGetVal());
-                else if (!strcmp("fullscreen",fileGetKey())) option_fullscreen = atoi(fileGetVal());
+        f = fileOpen(config_path);
+        if (f != NULL) {
+            while(fileNext(f)) {
+                if (!strcmp("joystick",fileGetKey(f))) option_joystick = atoi(fileGetVal(f));
+                else if (!strcmp("sound",fileGetKey(f))) option_sound = atoi(fileGetVal(f));
+                else if (!strcmp("music",fileGetKey(f))) option_music = atoi(fileGetVal(f));
+                else if (!strcmp("fullscreen",fileGetKey(f))) option_fullscreen = atoi(fileGetVal(f));
             }
-            fileClose();
+            fileClose(f);
             sysConfigApply();
         } else {
             printf ("Error: Couldn't load config file. Creating new config...\n");
@@ -348,6 +350,7 @@ void sysConfigApply() {
 }
 
 void sysHighScoresLoad() {
+    FileParser* f;
     int i = 0;
 
     mkdir(config_folder, S_IRWXU | S_IRWXG | S_IRWXO);
@@ -356,13 +359,14 @@ void sysHighScoresLoad() {
     if (path) {
         sprintf(path,"%s/highscores",config_folder);
 
-        if (fileOpen(path)) {
-            while (fileNext()) {
-                if (i < 10) high_scores[i] = atoi(fileGetLine());
+        f = fileOpen(path);
+        if (f != NULL) {
+            while (fileNext(f)) {
+                if (i < 10) high_scores[i] = atoi(fileGetLine(f));
                 else break;
                 i++;
             }
-            fileClose();
+            fileClose(f);
         } else {
             printf ("Error: Couldn't load high scores.\n");
             sysHighScoresSave();

@@ -20,13 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-FILE *file_file = NULL;
-char file_buffer[BUFSIZ];
-char *file_line = NULL;
-char *file_key = NULL;
-char *file_val = NULL;
-char *file_val_next = NULL;
-int file_val_cursor = 0;
+#include "fileparser.h"
 
 // implement strdup here since C99 doesn't have it
 char *strdup(const char *str) {
@@ -39,86 +33,101 @@ char *strdup(const char *str) {
     return new_str;
 }
 
-FILE* fileOpen(char *filename) {
-    file_file = fopen(filename,"r");
-    return file_file;
+FileParser* fileOpen(char *filename) {
+    FileParser* f = malloc(sizeof(FileParser));
+    if (f != NULL) {
+        f->file = fopen(filename,"r");
+        if (f->file != NULL) {
+            f->line = NULL;
+            f->key = NULL;
+            f->val = NULL;
+            f->val_next = NULL;
+            f->val_cursor = 0;
+        } else {
+            free(f);
+            f = NULL;
+        }
+    }
+
+    return f;
 }
 
-char* fileNext() {
-    file_key = NULL;
-    file_val = NULL;
-    if (file_val_next != NULL) {
-        free(file_val_next);
-        file_val_next = NULL;
+char* fileNext(FileParser* f) {
+    f->key = NULL;
+    f->val = NULL;
+    if (f->val_next != NULL) {
+        free(f->val_next);
+        f->val_next = NULL;
     }
-    file_val_cursor = 0;
+    f->val_cursor = 0;
 
-    if (file_file == NULL) return NULL;
+    if (f->file == NULL) return NULL;
 
-    char *tmp = fgets(file_buffer,BUFSIZ,file_file);
-    if (tmp != NULL) file_line = strdup(tmp);
+    char *tmp = fgets(f->buffer,BUFSIZ,f->file);
+    if (tmp != NULL) f->line = strdup(tmp);
     else return NULL;
 
-    if (file_line != NULL && file_line[0] != '#') {
-        file_key = strtok(file_line,"=");
-        file_val = strtok(NULL,"\n");
+    if (f->line != NULL && f->line[0] != '#') {
+        f->key = strtok(f->line,"=");
+        f->val = strtok(NULL,"\n");
     }
 
-    return file_line;
+    return f->line;
 }
 
-char* fileGetKey() {
-    if (file_key) return file_key;
+char* fileGetKey(FileParser* f) {
+    if (f->key) return f->key;
     else return "";
 }
 
-char* fileGetVal() {
-    if (file_val) return file_val;
+char* fileGetVal(FileParser* f) {
+    if (f->val) return f->val;
     else return "";
 }
 
-char* fileGetValNext() {
-    if (file_val_next != NULL) {
-        free(file_val_next);
-        file_val_next = NULL;
+char* fileGetValNext(FileParser* f) {
+    if (f->val_next != NULL) {
+        free(f->val_next);
+        f->val_next = NULL;
     }
     int i;
-    int len = strlen(file_val);
+    int len = strlen(f->val);
     int new_cursor = 0;
-    for (i=file_val_cursor; i<=len; i++) {
-        if (file_val[i] != ',' && file_val[i] != '\n') {
-            file_val_cursor++;
+    for (i=f->val_cursor; i<=len; i++) {
+        if (f->val[i] != ',' && f->val[i] != '\n') {
+            f->val_cursor++;
             new_cursor++;
-            file_val_next = realloc(file_val_next, file_val_cursor);
-            file_val_next[new_cursor-1] = file_val[i];
+            f->val_next = realloc(f->val_next, f->val_cursor);
+            f->val_next[new_cursor-1] = f->val[i];
         } else {
-            file_val_cursor++;
+            f->val_cursor++;
             new_cursor++;
-            file_val_next = realloc(file_val_next, file_val_cursor);
-            file_val_next[new_cursor-1] = '\0';
+            f->val_next = realloc(f->val_next, f->val_cursor);
+            f->val_next[new_cursor-1] = '\0';
             break;
         }
     }
-    if (file_val_next) return file_val_next;
+    if (f->val_next) return f->val_next;
     else return "";
 }
 
-char* fileGetLine() {
-    if (file_line) return file_line;
+char* fileGetLine(FileParser* f) {
+    if (f->line) return f->line;
     else return "";
 }
 
-void fileClose() {
-    if (file_val_next != NULL)
-        free(file_val_next);
-    if (file_line != NULL)
-        free(file_line);
-    if (file_file != NULL)
-        fclose(file_file);
+void fileClose(FileParser *f) {
+    if (f->val_next != NULL)
+        free(f->val_next);
+    if (f->line != NULL)
+        free(f->line);
+    if (f->file != NULL)
+        fclose(f->file);
 
-    file_key = NULL;
-    file_val = NULL;
-    file_val_next = NULL;
-    file_val_cursor = 0;
+    f->file = NULL;
+    f->key = NULL;
+    f->val = NULL;
+    f->val_next = NULL;
+    f->val_cursor = 0;
 }
 

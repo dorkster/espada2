@@ -24,26 +24,27 @@
 #include "sys.h"
 
 void playerInit() {
+    FileParser* f;
     player.speed = 4;
     player.bullets = NULL;
     player.bullet_count = 0;
 
     // load some stats from a config file
-    fileOpen(PKGDATADIR "/configs/player.txt");
-    while(fileNext()) {
-        if (!strcmp("width",fileGetKey())) player.pos.w = atoi(fileGetVal());
-        else if (!strcmp("height",fileGetKey())) player.pos.h = atoi(fileGetVal());
-        else if (!strcmp("speed",fileGetKey())) player.speed = atoi(fileGetVal());
-        else if (!strcmp("bullet",fileGetKey())) {
-            int x_offset = atoi(fileGetValNext());
-            int y_offset = atoi(fileGetValNext());
-            int angle = atoi(fileGetValNext());
-            int speed = atoi(fileGetValNext());
+    f = fileOpen(PKGDATADIR "/configs/player.txt");
+    while(fileNext(f)) {
+        if (!strcmp("width",fileGetKey(f))) player.pos.w = atoi(fileGetVal(f));
+        else if (!strcmp("height",fileGetKey(f))) player.pos.h = atoi(fileGetVal(f));
+        else if (!strcmp("speed",fileGetKey(f))) player.speed = atoi(fileGetVal(f));
+        else if (!strcmp("bullet",fileGetKey(f))) {
+            int x_offset = atoi(fileGetValNext(f));
+            int y_offset = atoi(fileGetValNext(f));
+            int angle = atoi(fileGetValNext(f));
+            int speed = atoi(fileGetValNext(f));
             player.bullet_count++;
             player.bullets = hazardDefAdd(player.bullet_count, player.bullets, x_offset, y_offset, angle, speed);
         }
     }
-    fileClose();
+    fileClose(f);
 
     player.pos.x = (SCREEN_WIDTH/2) - (player.pos.w/2);
     player.pos.y = SCREEN_HEIGHT - player.pos.h - 64;
