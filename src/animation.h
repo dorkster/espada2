@@ -39,6 +39,7 @@ typedef struct Animation{
 
 void animationInit(Animation* anim);
 Animation* animationAdd(Animation* anim, int* anim_count, char* filename);
+Animation* animationCopy(Animation* anim, int anim_count);
 void animationCleanup(Animation **anim, int* anim_count);
 void animationAdvanceFrame(Animation *anim);
 

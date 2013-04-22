@@ -1,9 +1,5 @@
-# TODO move gfx, width, height to animation file
-
 id=1
-gfx=0
-width=32
-height=32
+animation=/animations/enemy1.txt
 speed_x=1
 speed_y=1
 shoot_time=60
@@ -12,9 +8,7 @@ homing=1
 bullet=0,16,180,5
 
 id=2
-gfx=1
-width=48
-height=48
+animation=/animations/enemy2.txt
 speed_x=1
 speed_y=1
 shoot_time=90

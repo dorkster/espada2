@@ -83,6 +83,29 @@ Animation* animationAdd(Animation* anim, int* anim_count, char* filename) {
     return anim;
 }
 
+Animation* animationCopy(Animation* anim, int anim_count) {
+    if (anim_count < 1) return NULL;
+
+    Animation* new_anim = malloc(sizeof(Animation)*anim_count);
+    if (new_anim == NULL) return NULL;
+
+    int i;
+    for (i=0; i<anim_count; i++) {
+        new_anim[i].id = anim[i].id;
+        new_anim[i].gfx = anim[i].gfx;
+        new_anim[i].frame_current = anim[i].frame_current;
+        new_anim[i].frame_total = anim[i].frame_total;
+        new_anim[i].frame_duration = anim[i].frame_duration;
+        new_anim[i].frame_ticks = anim[i].frame_ticks;
+        new_anim[i].frame_width = anim[i].frame_width;
+        new_anim[i].frame_height = anim[i].frame_height;
+        new_anim[i].looped = anim[i].looped;
+        new_anim[i].finished = anim[i].finished;
+    }
+    return new_anim;
+}
+
+
 void animationCleanup(Animation **anim, int* anim_count) {
     if (*anim != NULL) {
         SDL_Surface* shared_gfx = NULL;

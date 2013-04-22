@@ -19,6 +19,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include "animation.h"
 #include "hazard.h"
 #include "sys.h"
 
@@ -29,13 +30,16 @@ typedef struct Enemy{
     int speed_x, speed_y;
     int type;
     SDL_Surface *gfx;
-    bool active;
+    bool alive;
     int shoot_timer, shoot_timer_max;
     int move_timer, move_timer_max;
     int homing;
     int boss;
     HazardDef *bullets;
     int bullet_count;
+    Animation* anim;
+    int anim_count;
+    int anim_current;
 }Enemy;
 
 typedef struct EnemyWave{
@@ -59,6 +63,8 @@ void enemyLogic();
 void enemyAdd(int type, int sector);
 void enemyReset(int i);
 void enemyCreateWave();
-void enemyKill(int i);
+void enemyHit(int i);
+bool enemyCheckAnimation(Enemy* e, int id);
+void enemySetAnimation(Enemy* e, int id);
 
 #endif

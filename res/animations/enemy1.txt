@@ -1,9 +1,9 @@
-gfx=/graphics/player.png
+gfx=/graphics/enemy1.png
 
 #default
 id=1
 frame_total=1
-frame_width=56
+frame_width=32
 frame_height=32
 looped=1
 

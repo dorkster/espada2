@@ -294,17 +294,17 @@ void gameCollide() {
     // hazards VS player/enemies
     for (i=0; i<HAZARD_MAX; i++) {
         if (hazards[i] != NULL) {
-            if (hazards[i]->src == HAZARD_ENEMY && sysCollide(&hazards[i]->pos, &player.pos)) {
+            if (hazards[i]->src == HAZARD_ENEMY && player.alive && sysCollide(&hazards[i]->pos, &player.pos)) {
                 // hazard hit player
                 hazardReset(i);
                 playerHit();
             } else if (hazards[i]->src == HAZARD_PLAYER) {
                 for (j=0; j<ENEMY_MAX; j++) {
                     if (enemies[j] != NULL) {
-                        if (enemies[j]->pos.y > 0 && sysCollide(&hazards[i]->pos, &enemies[j]->pos)) {
+                        if (enemies[j]->pos.y > 0 && enemies[j]->alive && sysCollide(&hazards[i]->pos, &enemies[j]->pos)) {
                             // hazard hit enemy
                             hazardReset(i);
-                            enemyKill(j);
+                            enemyHit(j);
                         }
                     }
                 }
@@ -315,9 +315,9 @@ void gameCollide() {
     // enemies VS player
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] != NULL) {
-            if (enemies[i]->pos.y > 0 && sysCollide(&enemies[i]->pos, &player.pos)) {
+            if (enemies[i]->pos.y > 0 && enemies[i]->alive && player.alive && sysCollide(&enemies[i]->pos, &player.pos)) {
                 // player collided with enemy
-                enemyKill(i);
+                enemyHit(i);
                 playerHit();
                 continue;
             }

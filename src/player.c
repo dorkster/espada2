@@ -62,7 +62,7 @@ void playerCleanup() {
 }
 
 void playerLogic() {
-    animationAdvanceFrame(&player.anim[player.anim_current-1]);
+    if (player.anim_count > 0) animationAdvanceFrame(&player.anim[player.anim_current-1]);
 
     if (player.alive) {
         playerMove();
@@ -110,20 +110,17 @@ void playerHit() {
 }
 
 bool playerCheckAnimation(int id) {
-    if (player.anim != NULL) {
-        if (id == ANIM_DEATH) {
-            if (player.anim_current == ANIM_DEATH) {
-                if (player.anim[ANIM_DEATH-1].finished) return true;
-            } else if (player.alive == false) {
-                player.anim[player.anim_current-1].finished = true;
-                return true;
-            }
+    if (id == ANIM_DEATH) {
+        if (player.anim != NULL && player.anim_current == ANIM_DEATH) {
+            if (player.anim[ANIM_DEATH-1].finished) return true;
+        } else if (player.alive == false) {
+            if (player.anim != NULL) player.anim[player.anim_current-1].finished = true;
+            return true;
         }
     }
     return false;
 }
 
-// TODO move this to animation.c ???
 void playerSetAnimation(int id) {
     if (player.anim != NULL) {
         if (id <= player.anim_count) {

@@ -1,8 +1,4 @@
-# TODO move these dimensions to an animation file
-width=56
-height=32
-
+animation=/animations/player.txt
 speed=4
 bullet=-28,-16,0,10
 bullet=28,-16,0,10
-animation=/animations/player.txt

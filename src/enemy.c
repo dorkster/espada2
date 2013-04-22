@@ -59,13 +59,7 @@ void enemyInit() {
                 enemy_stats[current_type-1].type = current_type;
             }
         } else if (current_type > 0) {
-            if (!strcmp("gfx",fileGetKey(f))) {
-                if (atoi(fileGetVal(f)) == 0) enemy_stats[current_type-1].gfx = surface_enemy1;
-                else if (atoi(fileGetVal(f)) == 1) enemy_stats[current_type-1].gfx = surface_enemy2;
-            }
-            else if (!strcmp("width",fileGetKey(f))) enemy_stats[current_type-1].pos.w = atoi(fileGetVal(f));
-            else if (!strcmp("height",fileGetKey(f))) enemy_stats[current_type-1].pos.h = atoi(fileGetVal(f));
-            else if (!strcmp("speed_x",fileGetKey(f))) enemy_stats[current_type-1].speed_x = atoi(fileGetVal(f));
+            if (!strcmp("speed_x",fileGetKey(f))) enemy_stats[current_type-1].speed_x = atoi(fileGetVal(f));
             else if (!strcmp("speed_y",fileGetKey(f))) enemy_stats[current_type-1].speed_y = atoi(fileGetVal(f));
             else if (!strcmp("shoot_time",fileGetKey(f))) enemy_stats[current_type-1].shoot_timer_max = atoi(fileGetVal(f));
             else if (!strcmp("move_time",fileGetKey(f))) enemy_stats[current_type-1].move_timer_max = atoi(fileGetVal(f));
@@ -78,7 +72,7 @@ void enemyInit() {
                 int speed = atoi(fileGetValNext(f));
                 enemy_stats[current_type-1].bullet_count++;
                 enemy_stats[current_type-1].bullets = hazardDefAdd(enemy_stats[current_type-1].bullet_count, enemy_stats[current_type-1].bullets, x_offset, y_offset, angle, speed);
-            }
+            } else if (!strcmp("animation",fileGetKey(f))) enemy_stats[current_type-1].anim = animationAdd(enemy_stats[current_type-1].anim, &enemy_stats[current_type-1].anim_count, fileGetVal(f));
         }
     }
     fileClose(f);
@@ -114,13 +108,16 @@ void enemyInitEnemy(Enemy* e) {
     e->speed_x = e->speed_y = 0;
     e->type = 0;
     e->gfx = NULL;
-    e->active = false;
+    e->alive = false;
     e->shoot_timer = e->shoot_timer_max = 0;
     e->move_timer = e->move_timer_max = 0;
     e->homing = 0;
     e->boss = 0;
     e->bullets = NULL;
     e->bullet_count = 0;
+    e->anim = NULL;
+    e->anim_count = 0;
+    e->anim_current = 0;
 }
 
 void enemyInitWave(EnemyWave* wave) {
@@ -137,6 +134,7 @@ void enemyCleanup() {
             if (enemy_stats[i].bullets != NULL) {
                 free(enemy_stats[i].bullets);
             }
+            animationCleanup(&enemy_stats[i].anim, &enemy_stats[i].anim_count);
         }
         free(enemy_stats);
         enemy_stats = NULL;
@@ -155,7 +153,9 @@ void enemyLogic() {
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] != NULL) {
-            if (enemies[i]->active) {
+            if (enemies[i]->anim_count > 0) animationAdvanceFrame(&enemies[i]->anim[enemies[i]->anim_current-1]);
+            // printf("%d\n",enemies[i]->anim[enemies[i]->anim_current-1].frame_total);
+            if (enemies[i]->alive) {
                 if (enemies[i]->move_timer == 0) {
                     enemies[i]->move_timer = enemies[i]->move_timer_max;
 
@@ -180,7 +180,7 @@ void enemyLogic() {
                     int j;
                     for (j=0; j<ENEMY_MAX; j++) {
                         if (enemies[j] != NULL) {
-                            if (i != j && enemies[i]->active && enemies[j]->active) {
+                            if (i != j && enemies[i]->alive && enemies[j]->alive) {
                                 if (sysCollide(&enemies[i]->pos, &enemies[j]->pos)) enemies[i]->pos.x = old_x;
                             }
                         }
@@ -201,9 +201,15 @@ void enemyLogic() {
                                   enemies[i]->bullets[k].speed);
                     }
                 } else enemies[i]->shoot_timer--;
+            } else {
+                if (enemyCheckAnimation(enemies[i], ANIM_DEATH)) {
+                    enemyReset(i);
+                    continue;
+                }
             }
             if (enemies[i]->pos.y > SCREEN_HEIGHT) {
                 enemyReset(i);
+                continue;
             }
         }
     }
@@ -218,7 +224,7 @@ void enemyAdd(int type, int sector) {
             enemies[i] = (Enemy*) malloc(sizeof(Enemy));
             if (enemies[i] == NULL) return;
 
-            enemies[i]->active = true;
+            enemies[i]->alive = true;
             enemies[i]->type = type;
             enemies[i]->move_timer = 0;
 
@@ -234,6 +240,11 @@ void enemyAdd(int type, int sector) {
             enemies[i]->boss = enemy_stats[type-1].boss;
             enemies[i]->bullets = enemy_stats[type-1].bullets;
             enemies[i]->bullet_count = enemy_stats[type-1].bullet_count;
+
+            enemies[i]->anim_count = enemy_stats[type-1].anim_count;
+            enemies[i]->anim_current = enemy_stats[type-1].anim_current;
+            enemies[i]->anim = animationCopy(enemy_stats[type-1].anim, enemy_stats[type-1].anim_count);
+            enemySetAnimation(enemies[i], ANIM_DEFAULT);
 
             // randomize the shooting timer
             enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);
@@ -251,6 +262,9 @@ void enemyAdd(int type, int sector) {
 
 void enemyReset(int i) {
     if (enemies[i] != NULL) {
+        if (enemies[i]->anim != NULL) {
+            free(enemies[i]->anim);
+        }
         free(enemies[i]);
         enemies[i] = NULL;
     }
@@ -278,8 +292,32 @@ void enemyCreateWave() {
     if (enemy_total > 0) level++;
 }
 
-void enemyKill(int i) {
-    // TODO switch to death animation and wait for it to finish before removing the enemy
-    enemyReset(i);
+void enemyHit(int i) {
+    if (enemies[i]->alive) {
+        enemySetAnimation(enemies[i], ANIM_DEATH);
+        enemies[i]->alive = false;
+    }
 }
 
+bool enemyCheckAnimation(Enemy* e, int id) {
+    if (id == ANIM_DEATH) {
+        if (e->anim != NULL && e->anim_current == ANIM_DEATH) {
+            if (e->anim[ANIM_DEATH-1].finished) return true;
+        } else if (e->alive == false) {
+            if (e->anim != NULL) e->anim[e->anim_current-1].finished = true;
+            return true;
+        }
+    }
+    return false;
+}
+
+void enemySetAnimation(Enemy* e, int id) {
+    if (e->anim != NULL) {
+        if (id <= e->anim_count) {
+            e->anim_current = id;
+            e->anim[id-1].frame_current = 0;
+            e->pos.w = e->anim[id-1].frame_width;
+            e->pos.h = e->anim[id-1].frame_height;
+        }
+    }
+}

@@ -174,7 +174,7 @@ void drawOptions() {
 
 void drawPlayer() {
     int id = player.anim_current-1;
-    if (&player.anim[id] != NULL) {
+    if (player.anim != NULL && id < player.anim_count) {
         if (player.anim[id].finished) return;
 
         SDL_Rect src,dest;
@@ -210,19 +210,25 @@ void drawHazards() {
 }
 
 void drawEnemies() {
-    SDL_Rect src,dest;
-
-    src.x = src.y = 0;
-
     int i;
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] != NULL) {
-            src.w = enemies[i]->pos.w;
-            src.h = enemies[i]->pos.h;
-            dest.x = enemies[i]->pos.x;
-            dest.y = enemies[i]->pos.y;
+            int id = enemies[i]->anim_current-1;
+            if (enemies[i]->anim != NULL && id < enemies[i]->anim_count) {
+                if (enemies[i]->anim[id].finished) return;
 
-            SDL_BlitSurface(enemies[i]->gfx,&src,screen,&dest);
+                SDL_Rect src,dest;
+
+                src.w = enemies[i]->pos.w;
+                src.h = enemies[i]->pos.h;
+
+                dest.x = enemies[i]->pos.x;
+                dest.y = enemies[i]->pos.y;
+
+                src.x = id * src.w; // animation type
+                src.y = enemies[i]->anim[id].frame_current * src.h; // animation frame
+                SDL_BlitSurface(enemies[i]->anim[id].gfx,&src,screen,&dest);
+            }
         }
     }
 }

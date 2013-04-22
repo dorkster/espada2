@@ -1,0 +1,9 @@
+gfx=/graphics/enemy2.png
+
+#default
+id=1
+frame_total=1
+frame_width=48
+frame_height=48
+looped=1
+

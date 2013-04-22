@@ -103,8 +103,6 @@ SDL_Surface* surface_background;
 SDL_Surface* surface_title;
 SDL_Surface* surface_highscores;
 SDL_Surface* surface_hazards;
-SDL_Surface* surface_enemy1;
-SDL_Surface* surface_enemy2;
 
 // Music and Sounds
 Mix_Music* music;
