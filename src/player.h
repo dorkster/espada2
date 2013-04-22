@@ -43,7 +43,7 @@ void playerLogic();
 void playerMove();
 void playerShoot();
 void playerHit();
-bool playerIsDead();
+bool playerCheckAnimation(int id);
 void playerSetAnimation(int id);
 
 #endif

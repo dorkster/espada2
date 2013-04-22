@@ -68,7 +68,7 @@ void playerLogic() {
         playerMove();
         playerShoot();
     } else {
-        if (playerIsDead()) trigger_game_over = true;
+        if (playerCheckAnimation(ANIM_DEATH)) trigger_game_over = true;
     }
 }
 
@@ -109,14 +109,15 @@ void playerHit() {
     }
 }
 
-bool playerIsDead() {
+bool playerCheckAnimation(int id) {
     if (player.anim != NULL) {
-        if (player.anim_current == ANIM_DEATH) {
-            if (player.anim[ANIM_DEATH-1].finished) return true;
-        }
-        else if (player.alive == false) {
-            player.anim[player.anim_current-1].finished = true;
-            return true;
+        if (id == ANIM_DEATH) {
+            if (player.anim_current == ANIM_DEATH) {
+                if (player.anim[ANIM_DEATH-1].finished) return true;
+            } else if (player.alive == false) {
+                player.anim[player.anim_current-1].finished = true;
+                return true;
+            }
         }
     }
     return false;
