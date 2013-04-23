@@ -50,12 +50,12 @@ install:
 	$(INSTALLDIR) $(DESTDIR)$(BINDIR)
 	$(INSTALLBIN) $(PROJNAME) $(DESTDIR)$(BINDIR)
 	$(INSTALLDIR) $(DESTDIR)$(PKGDATADIR)/fonts
-	$(INSTALLDAT) res/fonts/*.ttf $(DESTDIR)$(PKGDATADIR)/fonts
+	$(INSTALLDAT) data/fonts/*.ttf $(DESTDIR)$(PKGDATADIR)/fonts
 	$(INSTALLDIR) $(DESTDIR)$(PKGDATADIR)/graphics
-	$(INSTALLDAT) res/graphics/*.png $(DESTDIR)$(PKGDATADIR)/graphics
+	$(INSTALLDAT) data/graphics/*.png $(DESTDIR)$(PKGDATADIR)/graphics
 	$(INSTALLDIR) $(DESTDIR)$(PKGDATADIR)/sounds
-	$(INSTALLDAT) res/sounds/*.wav $(DESTDIR)$(PKGDATADIR)/sounds
-	$(INSTALLDAT) res/sounds/*.ogg $(DESTDIR)$(PKGDATADIR)/sounds
+	$(INSTALLDAT) data/sounds/*.wav $(DESTDIR)$(PKGDATADIR)/sounds
+	$(INSTALLDAT) data/sounds/*.ogg $(DESTDIR)$(PKGDATADIR)/sounds
 	$(INSTALLDIR) $(DESTDIR)$(APPDATADIR)
 	$(INSTALLDAT) $(PROJNAME).desktop $(DESTDIR)$(APPDATADIR)
 
