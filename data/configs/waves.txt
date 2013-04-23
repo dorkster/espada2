@@ -1,4 +1,4 @@
-wave_time=8
+wave_time=3
 
 level=1
 wave=1,0,0,0,0,0,0,1

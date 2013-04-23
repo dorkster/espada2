@@ -100,7 +100,7 @@ void enemyInit() {
     }
     fileClose(f);
 
-    enemy_wave_timer = enemy_wave_timer_max/2;
+    enemy_wave_timer = enemy_wave_timer_max;
 }
 
 void enemyInitEnemy(Enemy* e) {
@@ -273,23 +273,21 @@ void enemyReset(int i) {
 }
 
 void enemyCreateWave() {
-    if (enemy_wave_timer > 0) {
-        enemy_wave_timer--;
-        return;
-    }
-
     if (enemy_total > 0) return;
     if (enemy_level_max == 0) return;
 
-    enemy_wave_timer = enemy_wave_timer_max;
+    if (enemy_wave_timer > 0) {
+        enemy_wave_timer--;
+    } else {
+        enemy_wave_timer = enemy_wave_timer_max;
+        int wave = level % enemy_level_max;
+        int i;
+        for (i=0; i<8; i++) {
+            enemyAdd(enemy_wave[wave].sector[i],i);
+        }
 
-    int wave = level % enemy_level_max;
-    int i;
-    for (i=0; i<8; i++) {
-        enemyAdd(enemy_wave[wave].sector[i],i);
+        if (enemy_total > 0) level++;
     }
-
-    if (enemy_total > 0) level++;
 }
 
 void enemyHit(int i) {
