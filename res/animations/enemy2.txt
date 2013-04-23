@@ -7,3 +7,10 @@ frame_width=48
 frame_height=48
 looped=1
 
+#death
+id=2
+frame_total=7
+frame_duration=5
+frame_width=48
+frame_height=48
+looped=0
