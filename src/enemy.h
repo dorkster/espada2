@@ -35,6 +35,7 @@ typedef struct Enemy{
     int move_timer, move_timer_max;
     int homing;
     int boss;
+    bool immunity;
     HazardDef *bullets;
     int bullet_count;
     Animation* anim;
@@ -54,6 +55,7 @@ int enemy_type_max;
 int enemy_level_max;
 int enemy_wave_timer;
 int enemy_wave_timer_max;
+int enemy_immunity_buffer;
 
 void enemyInit();
 void enemyInitEnemy(Enemy* e);

@@ -39,10 +39,10 @@ void hazardLogic() {
                 hazards[i]->pos.x += hazards[i]->speed_x;
                 hazards[i]->pos.y += hazards[i]->speed_y;
             }
-            if (hazards[i]->pos.x < 0-HAZARD_SIZE ||
-                hazards[i]->pos.x > SCREEN_WIDTH ||
-                hazards[i]->pos.y < 0-HAZARD_SIZE ||
-                hazards[i]->pos.y > SCREEN_HEIGHT) {
+            if (hazards[i]->pos.x < 0 ||
+                hazards[i]->pos.x+HAZARD_SIZE > SCREEN_WIDTH ||
+                hazards[i]->pos.y < 0 ||
+                hazards[i]->pos.y+HAZARD_SIZE > SCREEN_HEIGHT) {
                 hazardReset(i);
             }
         }

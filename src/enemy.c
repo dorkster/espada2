@@ -33,6 +33,7 @@ int enemy_type_max = 0;
 int enemy_level_max = 0;
 int enemy_wave_timer = 0;
 int enemy_wave_timer_max = 0;
+int enemy_immunity_buffer = 0;
 
 void enemyInit() {
     FileParser* f;
@@ -83,6 +84,8 @@ void enemyInit() {
     while(fileNext(f)) {
         if (!strcmp("wave_time",fileGetKey(f))) {
             enemy_wave_timer_max = FPS * atoi(fileGetVal(f));
+        } else if (!strcmp("immunity_buffer",fileGetKey(f))) {
+            enemy_immunity_buffer = atoi(fileGetVal(f));
         } else if (!strcmp("level",fileGetKey(f))) {
             current_level = atoi(fileGetVal(f));
             if (current_level > enemy_level_max) {
@@ -113,6 +116,7 @@ void enemyInitEnemy(Enemy* e) {
     e->move_timer = e->move_timer_max = 0;
     e->homing = 0;
     e->boss = 0;
+    e->immunity = false;
     e->bullets = NULL;
     e->bullet_count = 0;
     e->anim = NULL;
@@ -154,8 +158,10 @@ void enemyLogic() {
     for (i=0; i<ENEMY_MAX; i++) {
         if (enemies[i] != NULL) {
             if (enemies[i]->anim_count > 0) animationAdvanceFrame(&enemies[i]->anim[enemies[i]->anim_current-1]);
-            // printf("%d\n",enemies[i]->anim[enemies[i]->anim_current-1].frame_total);
             if (enemies[i]->alive) {
+                if (enemies[i]->pos.y+enemies[i]->pos.h > enemy_immunity_buffer)
+                    enemies[i]->immunity = false;
+
                 if (enemies[i]->move_timer == 0) {
                     enemies[i]->move_timer = enemies[i]->move_timer_max;
 
@@ -223,6 +229,7 @@ void enemyAdd(int type, int sector) {
         if (enemies[i] == NULL) {
             enemies[i] = (Enemy*) malloc(sizeof(Enemy));
             if (enemies[i] == NULL) return;
+            enemyInitEnemy(enemies[i]);
 
             enemies[i]->alive = true;
             enemies[i]->type = type;
@@ -253,6 +260,8 @@ void enemyAdd(int type, int sector) {
             enemies[i]->pos.x = (sector*(SCREEN_WIDTH/8)) + (SCREEN_WIDTH/16) - (enemies[i]->pos.w/2);
             // y will typically be 0, so this will start enemies off screen
             enemies[i]->pos.y = -enemies[i]->pos.h;
+
+            if (enemies[i]->pos.y+enemies[i]->pos.h <= enemy_immunity_buffer) enemies[i]->immunity = true;
 
             enemy_total++;
             break;
