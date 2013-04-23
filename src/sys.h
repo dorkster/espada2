@@ -39,7 +39,7 @@ typedef enum { false = 0, true = 1 } bool;
 #define OPTIONS_MUSIC 3
 
 #ifndef PKGDATADIR
-#define PKGDATADIR "./res"
+#define PKGDATADIR "./data"
 #endif
 
 SDL_Surface* screen;
