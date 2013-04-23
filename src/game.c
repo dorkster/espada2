@@ -71,7 +71,7 @@ void gameInit() {
     level = 0;
 
     Mix_VolumeMusic(option_music*16);
-    if (!game_over) Mix_PlayMusic(music,-1);
+    if (!game_over) Mix_FadeInMusic(music,-1,2000);
 
     game_over = false;
 
