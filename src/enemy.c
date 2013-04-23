@@ -60,7 +60,9 @@ void enemyInit() {
                 enemy_stats[current_type-1].type = current_type;
             }
         } else if (current_type > 0) {
-            if (!strcmp("speed_x",fileGetKey(f))) enemy_stats[current_type-1].speed_x = atoi(fileGetVal(f));
+            if (!strcmp("hp",fileGetKey(f))) enemy_stats[current_type-1].hp = atoi(fileGetVal(f));
+            else if (!strcmp("score",fileGetKey(f))) enemy_stats[current_type-1].score = atoi(fileGetVal(f));
+            else if (!strcmp("speed_x",fileGetKey(f))) enemy_stats[current_type-1].speed_x = atoi(fileGetVal(f));
             else if (!strcmp("speed_y",fileGetKey(f))) enemy_stats[current_type-1].speed_y = atoi(fileGetVal(f));
             else if (!strcmp("shoot_time",fileGetKey(f))) enemy_stats[current_type-1].shoot_timer_max = atoi(fileGetVal(f));
             else if (!strcmp("move_time",fileGetKey(f))) enemy_stats[current_type-1].move_timer_max = atoi(fileGetVal(f));
@@ -108,6 +110,8 @@ void enemyInit() {
 
 void enemyInitEnemy(Enemy* e) {
     e->pos.x = e->pos.y = e->pos.w = e->pos.h = 0;
+    e->hp = 1;
+    e->score = 0;
     e->speed_x = e->speed_y = 0;
     e->type = 0;
     e->gfx = NULL;
@@ -214,6 +218,8 @@ void enemyLogic() {
                 }
             }
             if (enemies[i]->pos.y > SCREEN_HEIGHT) {
+                score -= enemies[i]->score;
+                if (score < 0) score = 0;
                 enemyReset(i);
                 continue;
             }
@@ -239,6 +245,8 @@ void enemyAdd(int type, int sector) {
             enemies[i]->gfx = enemy_stats[type-1].gfx;
             enemies[i]->pos.w = enemy_stats[type-1].pos.w;
             enemies[i]->pos.h = enemy_stats[type-1].pos.h;
+            enemies[i]->hp = enemy_stats[type-1].hp;
+            enemies[i]->score = enemy_stats[type-1].score;
             enemies[i]->speed_x = enemy_stats[type-1].speed_x;
             enemies[i]->speed_y = enemy_stats[type-1].speed_y;
             enemies[i]->shoot_timer_max = enemy_stats[type-1].shoot_timer_max;
@@ -299,10 +307,14 @@ void enemyCreateWave() {
     }
 }
 
-void enemyHit(int i) {
+void enemyHit(int i, int dmg) {
     if (enemies[i]->alive) {
-        enemySetAnimation(enemies[i], ANIM_DEATH);
-        enemies[i]->alive = false;
+        enemies[i]->hp -= dmg;
+        if (enemies[i]->hp <= 0) {
+            score += enemies[i]->score;
+            enemySetAnimation(enemies[i], ANIM_DEATH);
+            enemies[i]->alive = false;
+        }
     }
 }
 

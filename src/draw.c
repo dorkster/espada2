@@ -57,9 +57,11 @@ void drawBackground() {
     SDL_BlitSurface(surface_background,NULL,screen,&dest);
     SDL_BlitSurface(surface_background,NULL,screen,&dest2);
 
-    background_y += 5;
-    if (background_y > SCREEN_HEIGHT)
-        background_y = 0;
+    if (!game_over) {
+        background_y += 5;
+        if (background_y > SCREEN_HEIGHT)
+            background_y = 0;
+    }
 }
 
 void drawMenu(int offset) {

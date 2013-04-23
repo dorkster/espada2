@@ -27,6 +27,7 @@ void playerInit() {
     FileParser* f;
     player.alive = true;
     player.speed = 4;
+    player.damage = 1;
     player.bullets = NULL;
     player.bullet_count = 0;
     player.anim = NULL;
@@ -37,6 +38,7 @@ void playerInit() {
     f = fileOpen(PKGDATADIR "/configs/player.txt");
     while(fileNext(f)) {
         if (!strcmp("speed",fileGetKey(f))) player.speed = atoi(fileGetVal(f));
+        else if (!strcmp("damage",fileGetKey(f))) player.damage = atoi(fileGetVal(f));
         else if (!strcmp("bullet",fileGetKey(f))) {
             int x_offset = atoi(fileGetValNext(f));
             int y_offset = atoi(fileGetValNext(f));

@@ -304,7 +304,7 @@ void gameCollide() {
                         if (enemies[j]->alive && !enemies[j]->immunity && sysCollide(&hazards[i]->pos, &enemies[j]->pos)) {
                             // hazard hit enemy
                             hazardReset(i);
-                            enemyHit(j);
+                            enemyHit(j, player.damage);
                         }
                     }
                 }
@@ -317,7 +317,7 @@ void gameCollide() {
         if (enemies[i] != NULL) {
             if (enemies[i]->alive && !enemies[i]->immunity && player.alive && sysCollide(&enemies[i]->pos, &player.pos)) {
                 // player collided with enemy
-                enemyHit(i);
+                enemyHit(i, player.damage);
                 playerHit();
                 continue;
             }

@@ -27,6 +27,8 @@
 
 typedef struct Enemy{
     SDL_Rect pos;
+    int hp;
+    int score;
     int speed_x, speed_y;
     int type;
     SDL_Surface *gfx;
@@ -65,7 +67,7 @@ void enemyLogic();
 void enemyAdd(int type, int sector);
 void enemyReset(int i);
 void enemyCreateWave();
-void enemyHit(int i);
+void enemyHit(int i, int dmg);
 bool enemyCheckAnimation(Enemy* e, int id);
 void enemySetAnimation(Enemy* e, int id);
 

@@ -27,6 +27,7 @@ typedef struct Player{
     SDL_Rect pos;
     bool alive;
     int speed;
+    int damage;
     HazardDef* bullets;
     int bullet_count;
     Animation* anim;
