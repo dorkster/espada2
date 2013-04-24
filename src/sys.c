@@ -43,6 +43,10 @@ SDL_Surface* surface_enemy1 = NULL;
 SDL_Surface* surface_enemy2 = NULL;
 Mix_Music* music = NULL;
 Mix_Chunk* sound_menu = NULL;
+Mix_Chunk* sound_player_fire = NULL;
+Mix_Chunk* sound_enemy_fire = NULL;
+Mix_Chunk* sound_enemy_hit = NULL;
+Mix_Chunk* sound_explosion = NULL;
 SDL_Joystick* joy = NULL;
 
 int score = 0;
@@ -137,6 +141,18 @@ bool sysLoadFiles() {
     sound_menu = Mix_LoadWAV(PKGDATADIR "/sounds/menu.ogg");
     if (!sound_menu) return false;
 
+    sound_player_fire = Mix_LoadWAV(PKGDATADIR "/sounds/player_fire.ogg");
+    if (!sound_player_fire) return false;
+
+    sound_enemy_fire = Mix_LoadWAV(PKGDATADIR "/sounds/enemy_fire.ogg");
+    if (!sound_enemy_fire) return false;
+
+    sound_enemy_hit = Mix_LoadWAV(PKGDATADIR "/sounds/enemy_hit.ogg");
+    if (!sound_enemy_hit) return false;
+
+    sound_explosion = Mix_LoadWAV(PKGDATADIR "/sounds/explosion.ogg");
+    if (!sound_explosion) return false;
+
     return true;
 }
 
@@ -154,6 +170,10 @@ void sysCleanup() {
     SDL_FreeSurface(surface_hazards);
     Mix_FreeMusic(music);
     Mix_FreeChunk(sound_menu);
+    Mix_FreeChunk(sound_player_fire);
+    Mix_FreeChunk(sound_enemy_fire);
+    Mix_FreeChunk(sound_enemy_hit);
+    Mix_FreeChunk(sound_explosion);
     SDL_Quit();
 }
 

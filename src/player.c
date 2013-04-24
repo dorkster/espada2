@@ -91,6 +91,7 @@ void playerShoot() {
     if (action_cooldown > 0) return;
 
     if (action_main1) {
+        Mix_PlayChannel(-1,sound_player_fire,0);
         int i;
         for (i=0; i<player.bullet_count; i++) {
             hazardAdd(HAZARD_PLAYER,
@@ -108,6 +109,7 @@ void playerShoot() {
 void playerHit() {
     if (player.alive) {
         playerSetAnimation(ANIM_DEATH);
+        Mix_PlayChannel(-1,sound_explosion,0);
         player.alive = false;
     }
 }

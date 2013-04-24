@@ -199,6 +199,7 @@ void enemyLogic() {
 
                 // shoot
                 if (enemies[i]->shoot_timer == 0) {
+                    Mix_PlayChannel(-1,sound_enemy_fire,0);
                     enemies[i]->shoot_timer = sysRandBetween(enemies[i]->shoot_timer_max/2, enemies[i]->shoot_timer_max);
 
                     int k;
@@ -312,9 +313,11 @@ void enemyHit(int i, int dmg) {
         if (enemies[i]->hp <= 0) {
             score += enemies[i]->score;
             enemySetAnimation(enemies[i], ANIM_DEATH);
+            Mix_PlayChannel(-1,sound_explosion,0);
             enemies[i]->alive = false;
         } else {
             enemySetAnimation(enemies[i], ANIM_HIT);
+            Mix_PlayChannel(-1,sound_enemy_hit,0);
         }
     }
 }

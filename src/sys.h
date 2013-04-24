@@ -107,6 +107,10 @@ SDL_Surface* surface_hazards;
 // Music and Sounds
 Mix_Music* music;
 Mix_Chunk* sound_menu;
+Mix_Chunk* sound_player_fire;
+Mix_Chunk* sound_enemy_fire;
+Mix_Chunk* sound_enemy_hit;
+Mix_Chunk* sound_explosion;
 
 // Joystick
 SDL_Joystick* joy;
