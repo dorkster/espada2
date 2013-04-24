@@ -249,7 +249,7 @@ void gameOver() {
     trigger_game_over = false;
     game_over = true;
 
-    menuAdd("Try again");
+    menuAdd("Play again");
     menuAdd("Return to title screen");
 }
 
