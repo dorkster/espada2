@@ -13,6 +13,8 @@ Espada 2's source code is released under the GNU GPL v3. Later versions are perm
 
 The included VDS font is licensed under the SIL Open Font License, Version 1.1.
 
+data/sounds/explosion.ogg is a modified version of sandyrb's 'THE CRASH.wav' (http://www.freesound.org/people/sandyrb/sounds/95078/), which was released under CC-BY 3.0.
+
 All other artwork is by me, Justin Jacobs, and is licensed under CC-BY-SA 3.0.
 
 
