@@ -28,9 +28,6 @@
 int background_y = 0;
 
 void drawEverything() {
-    // Fill the screen with black
-    SDL_FillRect(screen,NULL, 0x000000);
-
     drawBackground();
 
     if (title_screen) {
