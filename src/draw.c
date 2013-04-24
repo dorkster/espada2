@@ -177,7 +177,7 @@ void drawOptions() {
 void drawPlayer() {
     int id = player.anim_current-1;
     if (player.anim != NULL && id < player.anim_count) {
-        if (player.anim[id].finished) return;
+        if (!player.alive && player.anim[id].finished) return;
 
         SDL_Rect src,dest;
 
@@ -217,7 +217,7 @@ void drawEnemies() {
         if (enemies[i] != NULL) {
             int id = enemies[i]->anim_current-1;
             if (enemies[i]->anim != NULL && id < enemies[i]->anim_count) {
-                if (enemies[i]->anim[id].finished) return;
+                if (!enemies[i]->alive && enemies[i]->anim[id].finished) return;
 
                 SDL_Rect src,dest;
 

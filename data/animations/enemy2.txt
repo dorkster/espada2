@@ -14,3 +14,11 @@ frame_duration=5
 frame_width=48
 frame_height=48
 looped=0
+
+#hit
+id=3
+frame_total=1
+frame_duration=1
+frame_width=48
+frame_height=48
+looped=0

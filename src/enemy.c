@@ -211,11 +211,10 @@ void enemyLogic() {
                                   enemies[i]->bullets[k].speed);
                     }
                 } else enemies[i]->shoot_timer--;
-            } else {
-                if (enemyCheckAnimation(enemies[i], ANIM_DEATH)) {
-                    enemyReset(i);
-                    continue;
-                }
+            }
+            if (enemyCheckAnimation(enemies[i], enemies[i]->anim_current)) {
+                enemyReset(i);
+                continue;
             }
             if (enemies[i]->pos.y > SCREEN_HEIGHT) {
                 score -= enemies[i]->score;
@@ -314,6 +313,8 @@ void enemyHit(int i, int dmg) {
             score += enemies[i]->score;
             enemySetAnimation(enemies[i], ANIM_DEATH);
             enemies[i]->alive = false;
+        } else {
+            enemySetAnimation(enemies[i], ANIM_HIT);
         }
     }
 }
@@ -325,6 +326,10 @@ bool enemyCheckAnimation(Enemy* e, int id) {
         } else if (e->alive == false) {
             if (e->anim != NULL) e->anim[e->anim_current-1].finished = true;
             return true;
+        }
+    } else if (id != ANIM_DEFAULT) {
+        if (e->anim != NULL && e->anim[e->anim_current-1].finished) {
+            enemySetAnimation(e,ANIM_DEFAULT);
         }
     }
     return false;

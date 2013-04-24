@@ -23,6 +23,7 @@
 
 #define ANIM_DEFAULT 1
 #define ANIM_DEATH 2
+#define ANIM_HIT 3
 
 typedef struct Animation{
     int id;

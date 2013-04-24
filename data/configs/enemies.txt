@@ -1,6 +1,6 @@
 id=1
 animation=/animations/enemy1.txt
-hp=1
+hp=4
 score=50
 speed_x=1
 speed_y=1
@@ -11,7 +11,7 @@ bullet=0,16,180,5
 
 id=2
 animation=/animations/enemy2.txt
-hp=5
+hp=8
 score=200
 speed_x=1
 speed_y=1

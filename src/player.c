@@ -50,9 +50,9 @@ void playerInit() {
     }
     fileClose(f);
 
+    playerSetAnimation(ANIM_DEFAULT);
     player.pos.x = (SCREEN_WIDTH/2) - (player.pos.w/2);
     player.pos.y = SCREEN_HEIGHT - player.pos.h - 64;
-    playerSetAnimation(ANIM_DEFAULT);
 }
 
 void playerCleanup() {
@@ -69,8 +69,9 @@ void playerLogic() {
     if (player.alive) {
         playerMove();
         playerShoot();
-    } else {
-        if (playerCheckAnimation(ANIM_DEATH)) trigger_game_over = true;
+    }
+    if (playerCheckAnimation(player.anim_current)) {
+        trigger_game_over = true;
     }
 }
 
@@ -116,8 +117,12 @@ bool playerCheckAnimation(int id) {
         if (player.anim != NULL && player.anim_current == ANIM_DEATH) {
             if (player.anim[ANIM_DEATH-1].finished) return true;
         } else if (player.alive == false) {
-            if (player.anim != NULL) player.anim[player.anim_current-1].finished = true;
+            if (player.anim != NULL) player.anim[id-1].finished = true;
             return true;
+        }
+    } else if (id != ANIM_DEFAULT) {
+        if (player.anim != NULL && player.anim[id-1].finished) {
+            playerSetAnimation(ANIM_DEFAULT);
         }
     }
     return false;
