@@ -115,10 +115,10 @@ void playerHit() {
 }
 
 bool playerCheckAnimation(int id) {
-    if (id == ANIM_DEATH) {
+    if (player.alive == false) {
         if (player.anim != NULL && player.anim_current == ANIM_DEATH) {
             if (player.anim[ANIM_DEATH-1].finished) return true;
-        } else if (player.alive == false) {
+        } else {
             if (player.anim != NULL) player.anim[id-1].finished = true;
             return true;
         }

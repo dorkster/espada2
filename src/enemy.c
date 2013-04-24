@@ -323,10 +323,10 @@ void enemyHit(int i, int dmg) {
 }
 
 bool enemyCheckAnimation(Enemy* e, int id) {
-    if (id == ANIM_DEATH) {
+    if (e->alive == false) {
         if (e->anim != NULL && e->anim_current == ANIM_DEATH) {
             if (e->anim[ANIM_DEATH-1].finished) return true;
-        } else if (e->alive == false) {
+        } else {
             if (e->anim != NULL) e->anim[e->anim_current-1].finished = true;
             return true;
         }
