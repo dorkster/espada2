@@ -43,7 +43,6 @@ SDL_Surface* surface_enemy1 = NULL;
 SDL_Surface* surface_enemy2 = NULL;
 Mix_Music* music = NULL;
 Mix_Chunk* sound_menu = NULL;
-Mix_Chunk* sound_switch = NULL;
 SDL_Joystick* joy = NULL;
 
 int score = 0;
@@ -135,11 +134,8 @@ bool sysLoadFiles() {
     if (!music) return false;
 
     // sound effects
-    // sound_menu = Mix_LoadWAV(PKGDATADIR "/sounds/menu.wav");
-    // if (!sound_menu) return false;
-
-    // sound_switch = Mix_LoadWAV(PKGDATADIR "/sounds/switch.wav");
-    // if (!sound_switch) return false;
+    sound_menu = Mix_LoadWAV(PKGDATADIR "/sounds/menu.ogg");
+    if (!sound_menu) return false;
 
     return true;
 }
@@ -158,7 +154,6 @@ void sysCleanup() {
     SDL_FreeSurface(surface_hazards);
     Mix_FreeMusic(music);
     Mix_FreeChunk(sound_menu);
-    Mix_FreeChunk(sound_switch);
     SDL_Quit();
 }
 
